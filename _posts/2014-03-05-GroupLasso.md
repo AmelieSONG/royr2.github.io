@@ -1,5 +1,5 @@
 ---
-title: "Grouped Lasso"
+title: "Group Lasso"
 author: "Riddhiman Roy"
 date: "April 15th 2014"
 output:
@@ -29,10 +29,7 @@ There are a lot of different packages in **R** which implement *group Lasso*. I'
 
 For this little exercise let's try to predict the **US Unemployment Rate** using some information that's provided by the **Fed** ([link](http://www.federalreserve.gov/bankinforeg/stress-tests/supervisory-baseline-adverse-and-severely-adverse-scenarios.htm)). These are the **CCAR**/**DFAST** regulatory stress testing scenarios that banks need to use to project their financial statement line items. The Fed provides forward looking projections for a variety of different macro-economic indicators. Let's use them to create forward looking unemployment projections. 
 
-You can download the input files I am using here:   
-[Projections.csv](/assets/downloads/projections.csv)  
-[Historical Data.csv](/assets/downloads/historical.csv)
-
+You can download the input files I am using [here](https://github.com/royr2/royr2.github.io/tree/master/assets/downloads).   
 R-Code
 ===
 
