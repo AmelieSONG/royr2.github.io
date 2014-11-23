@@ -130,7 +130,7 @@ code {
   color: #bf616a;
   background-color: #EEEEEE;
   border-radius: 3px;
-  font-weight: 550;
+  font: bold 20px;
 }
 pre {
   display: block;
