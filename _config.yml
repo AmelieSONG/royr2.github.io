@@ -1,0 +1,11 @@
+title:        <a href = "http://royr2.github.io">R&sup2</a>
+tagline:      A personal Blog
+description:  R, Finance and statistics
+url:          http://royr2.github.io
+author:
+  name:       ''
+  email:      ''
+markdown:     kramdown
+permalink:    pretty
+pygments:     true
+paginate:     5
