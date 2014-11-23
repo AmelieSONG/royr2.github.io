@@ -30,6 +30,7 @@ There are a lot of different packages in **R** which implement *group Lasso*. I'
 For this little exercise let's try to predict the **US Unemployment Rate** using some information that's provided by the **Fed** ([link](http://www.federalreserve.gov/bankinforeg/stress-tests/supervisory-baseline-adverse-and-severely-adverse-scenarios.htm)). These are the **CCAR**/**DFAST** regulatory stress testing scenarios that banks need to use to project their financial statement line items. The Fed provides forward looking projections for a variety of different macro-economic indicators. Let's use them to create forward looking unemployment projections. 
 
 You can download the input files I am using [here](https://github.com/royr2/royr2.github.io/tree/master/assets/downloads).   
+
 R-Code
 ===
 
@@ -51,7 +52,7 @@ hist=data.frame(Date=as.Date(as.yearqtr(hist[,1])),hist[,-1])
 proj=data.frame(Date=proj[,1],proj[,-1])
 {% endhighlight %}
 
-> Now let's plot and have a look at the data. 
+Now let's plot and have a look at the data. 
 
 {% highlight r %}
 #Note that columns in a data frame can be referenced using the '$' operator
@@ -147,7 +148,7 @@ text(x=x-0.5,y=y-0.1,labels=paste("Lambda\n=",lmda),pos=1,cex=0.8)
 
 <img src="/assets/figures/GroupLasso/unnamed-chunk-3-1.png" title="center" alt="center" style="display: block; margin: auto;" />
 
-> The intercept is not penalized and hence is always present in the regression equation. But as the plot above shows, each group enters the regression equation at a particular value of lambda. For example:
+The intercept is not penalized and hence is always present in the regression equation. But as the plot above shows, each group enters the regression equation at a particular value of lambda. For example:
 
 
 {% highlight r %}
@@ -244,7 +245,7 @@ legend(x=40,y=5,legend=c("Actual","Predicted"),fill=c(cols[c(1,2)]),bty="n",cex=
 
 <img src="/assets/figures/GroupLasso/unnamed-chunk-5-2.png" title="center" alt="center" style="display: block; margin: auto;" />
 
-> Let's now try to generate some forward looking projections and compare them against what the Fed has provided us.
+Let's now try to generate some forward looking projections and compare them against what the Fed has provided us.
 
 {% highlight r %}
 #Get forward looking projections
