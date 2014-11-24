@@ -11,8 +11,7 @@ layout: post
 
 I wanted to follow up on my last post with a post on using **Ridge and Lasso regression** . **Lasso** can also be used for **variable selection**.
 
-### Ridge Regression
-[*Ridge regression*](http://www.stat.cmu.edu/~ryantibs/datamining/lectures/16-modr1.pdf) modifies the *least squares* objective function by adding to it a penalty term (*L2 Norm*). Hence, the objective function that needs to be minimized can be given as: 
+[**Ridge regression**](http://www.stat.cmu.edu/~ryantibs/datamining/lectures/16-modr1.pdf) modifies the *least squares* objective function by adding to it a penalty term (*L2 Norm*). Hence, the objective function that needs to be minimized can be given as: 
 
 $$ \sum_{i}(y_i-x^T\beta)^2+\lambda\sum_{j=1}^{p}\beta_j^2 $$
 
@@ -22,8 +21,7 @@ The penalty term shrinks the coefficients in the final regression equation. \(\l
 
 Note that since *ridge regression* uses the *L2* norm, the coefficients will *not exactly equal zero*. So, as a final step we could either choose to ignore those variables that have very small coefficients and fit our model just using the remaining variables and get a clean model or, keep the output from ridge regression as is. 
 
-### LASSO
-[*Lasso*](http://statweb.stanford.edu/~tibs/lasso/lasso.pdf) is very similar to *ridge regression*. The only differ*ence being the penalty that is added to the *least squares* objective function. *Lasso* uses the *L1* norm instead. The objective function looks like this:
+[**Lasso**](http://statweb.stanford.edu/~tibs/lasso/lasso.pdf) is very similar to *ridge regression*. The only differ*ence being the penalty that is added to the *least squares* objective function. *Lasso* uses the *L1* norm instead. The objective function looks like this:
 
 $$ sum_{i}(y_i-x^T\beta)^2+\lambda\sum_{j=1}^{p}\ |beta_j|$$
 
