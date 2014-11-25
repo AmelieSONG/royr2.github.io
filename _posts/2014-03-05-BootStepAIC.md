@@ -7,6 +7,7 @@ output:
     keep_md: yes
     self_contained: yes
 layout: post
+
 ---
 
 I work in the field of finance and find that people often rely on OLS regressions for doing predictive analysis. It's easy to implement and everyone knows about it. OLS regression gives us a very well developed mathematical framework which can be used to develop linear relationships. These relationships can then be used to create forward looking projections. But what about the features? How does one go about selecting the right feature set which can be used to reliably predict the variable under consideration?
@@ -34,7 +35,7 @@ The following code snippets follow the post above. For this simple example I'll 
 
 Lets first install the required package.
 
-{% highlight r %}
+```
 #Install the package called "Performance Analytics"
 install.packages("PerformanceAnalytics",repos="http://cran.us.r-project.org")
 
@@ -43,7 +44,7 @@ library(PerformanceAnalytics)
 
 #Load 'Managers' dataset
 data(managers)
-{% endhighlight %}
+```
 
 {% highlight r %}
 #The data sets looks like this
