@@ -8,7 +8,7 @@ author:
 markdown:     kramdown
 permalink:    pretty
 pygments:     true
-paginate:     3
+paginate:     4
 analytics :
   provider : google 
   google : 
