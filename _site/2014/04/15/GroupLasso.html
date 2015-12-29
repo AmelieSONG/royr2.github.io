@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  
+  <title>
+    Group Lasso &middot; 
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.png">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+ 
+   <body>
+
+    <header class="masthead">
+      <div class="masthead-inner">
+        <h1><a href = "/">R&sup2</a></h1>
+        <p class="lead">A personal blog about my fumblings with statistics, finance and anything  R</p>
+
+        <div class="colophon">
+          <ul class="colophon-links">
+            <li>
+              View project on <a href="https://github.com/royr2/royr2.github.io">GitHub</a>
+            </li>
+			<li><a href="http://www.linkedin.com/in/riddhimanr"><b>Linkedin</b></a><li>
+		  </ul>
+		  
+			Built using <a href = "http://jekyllrb.com"> jekyll </a> and <a href = "http://andhyde.com/"> hyde</a>
+        </div>
+	  </div>
+    </header>
+
+    <div class="content container">
+      <div class="post">
+  <h1>Group Lasso</h1>
+  <span class="post-date">15 Apr 2014</span>
+  <p>There is a nice extention to the <strong>Lasso</strong> which lets variable selection work on a group of variables. Hence, instead of a single variable entering the mix, an entire group of variables enter the regression equation together (see <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.79.2062&amp;rep=rep1&amp;type=pdf"><em>Yuan and Lin</em></a>). Also see <a href="http://blog.cos.name/bigknife/files/2012/07/group-lars.pdf">link</a></p>
+
+<p>The <strong>Lasso</strong> estimate is the solution to:</p>
+
+<script type="math/tex; mode=display">||y-X\beta||^2 \mbox{subject to} \sum_{i=1}^{P}(|\beta_{i}|) \le t</script>
+
+<p>The <strong>Group Lasso</strong> modifies this objective function by taking into account the coefficients from each group:</p>
+
+<script type="math/tex; mode=display">\frac{1}{2}||y-\sum_{j=1}^{J}x_j\beta_j||^2 + \lambda\sum_{j=1}^{J}||\beta_j||_{K_j}</script>
+
+<p>where <script type="math/tex">\vert \vert \cdot \vert \vert</script> is the euclidean norm.</p>
+
+<p>There are a lot of different packages in <strong>R</strong> which implement <em>group Lasso</em>. I’ll use a package called <strong>gglasso</strong> written by <a href="http://cran.r-project.org/web/packages/gglasso/gglasso.pdf">Yi Yang and Hui Zou</a></p>
+
+<p>For this little exercise let’s try to predict the <strong>US Unemployment Rate</strong> using some information that’s provided by the <strong>Fed</strong> (<a href="http://www.federalreserve.gov/bankinforeg/stress-tests/supervisory-baseline-adverse-and-severely-adverse-scenarios.htm">link</a>). These are the <strong>CCAR</strong>/<strong>DFAST</strong> regulatory stress testing scenarios that banks need to use to project their financial statement line items. The Fed provides forward looking projections for a variety of different macro-economic indicators. Let’s use them to create forward looking unemployment projections.</p>
+
+<p>You can download the input files I am using <a href="https://github.com/royr2/royr2.github.io/tree/master/assets/downloads">here</a>.</p>
+
+<h1 id="r-code">R-Code</h1>
+
+<h2 id="data-and-libraries">Data and Libraries</h2>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#install.packages(&quot;gglasso&quot;)</span>
+<span class="c1">#install.packages(&quot;zoo&quot;)</span>
+<span class="c1">#install.packages(&quot;RColorBrewer&quot;)</span>
+<span class="kn">library</span><span class="p">(</span>gglasso<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>RColorBrewer<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>zoo<span class="p">)</span>
+
+hist<span class="o">=</span>read.csv<span class="p">(</span><span class="s">&quot;historical data.csv&quot;</span><span class="p">)</span>
+proj<span class="o">=</span>read.csv<span class="p">(</span><span class="s">&quot;projections.csv&quot;</span><span class="p">)</span>
+
+hist<span class="o">=</span><span class="kt">data.frame</span><span class="p">(</span>Date<span class="o">=</span><span class="kp">as.Date</span><span class="p">(</span>as.yearqtr<span class="p">(</span>hist<span class="p">[,</span><span class="m">1</span><span class="p">])),</span>hist<span class="p">[,</span><span class="m">-1</span><span class="p">])</span>
+proj<span class="o">=</span><span class="kt">data.frame</span><span class="p">(</span>Date<span class="o">=</span>proj<span class="p">[,</span><span class="m">1</span><span class="p">],</span>proj<span class="p">[,</span><span class="m">-1</span><span class="p">])</span></code></pre></figure>
+
+<p>Now let’s plot and have a look at the data.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Note that columns in a data frame can be referenced using the &#39;$&#39; operator</span>
+plot<span class="p">(</span>y<span class="o">=</span>hist<span class="o">$</span>Unemployment.Rate<span class="p">,</span>x<span class="o">=</span>hist<span class="o">$</span>Date<span class="p">,</span>main<span class="o">=</span><span class="s">&quot;Unemployment&quot;</span><span class="p">,</span>lwd<span class="o">=</span><span class="m">2</span><span class="p">,</span>col<span class="o">=</span><span class="s">&quot;slateblue&quot;</span><span class="p">,</span>type<span class="o">=</span><span class="s">&quot;l&quot;</span><span class="p">,</span>
+     xlab<span class="o">=</span><span class="s">&quot;Time&quot;</span><span class="p">,</span>ylab<span class="o">=</span><span class="s">&quot;Unemployment %&quot;</span><span class="p">)</span>
+grid<span class="p">()</span></code></pre></figure>
+
+<p><img src="/assets/figures/GroupLasso/unnamed-chunk-2-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
+
+<blockquote>
+  <p><strong>Note:</strong>
+The time series is not stationary and ideally we shouldn’t be using such a time series for any kind of regression analysis but for now let’s keep things simple. We wont be using any kind of transformations on our data.</p>
+</blockquote>
+
+<h2 id="variable-selection">Variable Selection</h2>
+<p>Now let’s use group lasso to see which variable groups enter the regression equation. First, let’s assign group numbers to our variables. I am going to use the following groupings:</p>
+
+<ul>
+  <li>GDP, income and inflation rate as <em>Group1</em></li>
+  <li>All treasury yields and BBB Corporate yield as <em>Group2</em></li>
+  <li>Mortage rate, prime rate ,HPI % change and commercial RE % change as <em>Group3</em></li>
+  <li>Dow Jones and VIX as <em>Group4</em></li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="kp">names</span><span class="p">(</span>hist<span class="p">)</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">##  [1] &quot;Date&quot;                                      
+##  [2] &quot;Real.GDP.Growth&quot;                           
+##  [3] &quot;Real.Disposable.Income.Growth&quot;             
+##  [4] &quot;Unemployment.Rate&quot;                         
+##  [5] &quot;CPI.Inflation.Rate&quot;                        
+##  [6] &quot;X3.Month.Treasury&quot;                         
+##  [7] &quot;X5.Year.Treasury&quot;                          
+##  [8] &quot;X10.Year.Treausry&quot;                         
+##  [9] &quot;BBB.Corporate.Yield&quot;                       
+## [10] &quot;Mortgage.Rate&quot;                             
+## [11] &quot;Prime.Rate&quot;                                
+## [12] &quot;House.Price.Index.pct.chg&quot;                 
+## [13] &quot;Commercial.Real.Estate.Price.Index.pct.chg&quot;
+## [14] &quot;Market.Volatility.Index..VIX..pct.chg&quot;     
+## [15] &quot;Dow.Jones.Total.Stock.Market.Index.pct.chg&quot;</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Remove Dates and Unemployment from the model matrix </span>
+X<span class="o">=</span>hist<span class="p">[,</span><span class="kt">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">-4</span><span class="p">)]</span>
+X<span class="o">=</span><span class="kp">as.matrix</span><span class="p">(</span>X<span class="p">)</span>
+Y<span class="o">=</span>hist<span class="p">[,</span><span class="m">4</span><span class="p">]</span>
+grp<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">4</span><span class="p">,</span><span class="m">4</span><span class="p">)</span>
+fit<span class="o">=</span>gglasso<span class="p">(</span>x<span class="o">=</span>X<span class="p">,</span>y<span class="o">=</span>Y<span class="p">,</span>group<span class="o">=</span>grp<span class="p">,</span>loss<span class="o">=</span><span class="s">&#39;ls&#39;</span><span class="p">)</span>
+coef.mat<span class="o">=</span>fit<span class="o">$</span><span class="kp">beta</span>
+
+<span class="c1">#Group1 enters the equation</span>
+g1<span class="o">=</span><span class="kp">max</span><span class="p">(</span><span class="kp">which</span><span class="p">(</span>coef.mat<span class="p">[</span><span class="m">1</span><span class="p">,]</span><span class="o">==</span><span class="m">0</span><span class="p">))</span>
+
+<span class="c1">#Group2 enters the equation</span>
+g2<span class="o">=</span><span class="kp">max</span><span class="p">(</span><span class="kp">which</span><span class="p">(</span>coef.mat<span class="p">[</span><span class="m">4</span><span class="p">,]</span><span class="o">==</span><span class="m">0</span><span class="p">))</span>
+
+<span class="c1">#Group3 enters the equation</span>
+g3<span class="o">=</span><span class="kp">max</span><span class="p">(</span><span class="kp">which</span><span class="p">(</span>coef.mat<span class="p">[</span><span class="m">8</span><span class="p">,]</span><span class="o">==</span><span class="m">0</span><span class="p">))</span>
+
+<span class="c1">#Group4 enters the equation</span>
+g4<span class="o">=</span><span class="kp">max</span><span class="p">(</span><span class="kp">which</span><span class="p">(</span>coef.mat<span class="p">[</span><span class="m">12</span><span class="p">,]</span><span class="o">==</span><span class="m">0</span><span class="p">))</span>
+
+<span class="c1">#Coefficient Plot. Let&#39;s also use some nice colors</span>
+
+cols<span class="o">=</span>brewer.pal<span class="p">(</span><span class="m">5</span><span class="p">,</span>name<span class="o">=</span><span class="s">&quot;Set1&quot;</span><span class="p">)</span>
+
+plot<span class="p">(</span>fit<span class="o">$</span>b0<span class="p">,</span>main<span class="o">=</span><span class="s">&quot;Coefficient vs Step&quot;</span><span class="p">,</span>
+     ylab<span class="o">=</span><span class="s">&quot;Intercept&quot;</span><span class="p">,</span>xlab<span class="o">=</span><span class="s">&quot;Step (decreasing Lambda =&gt;)&quot;</span><span class="p">,</span>
+     col<span class="o">=</span>cols<span class="p">[</span><span class="m">1</span><span class="p">],</span>
+     xlim<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">100</span><span class="p">),</span>
+     ylim<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="kp">max</span><span class="p">(</span>fit<span class="o">$</span>b0<span class="p">)),</span>
+     type<span class="o">=</span><span class="s">&quot;l&quot;</span><span class="p">,</span>lwd<span class="o">=</span><span class="m">4</span><span class="p">)</span>
+grid<span class="p">()</span>
+par<span class="p">(</span>new<span class="o">=</span><span class="bp">T</span><span class="p">)</span>
+
+x<span class="o">=</span><span class="kt">c</span><span class="p">(</span>g1<span class="p">,</span>g2<span class="p">,</span>g3<span class="p">,</span>g4<span class="p">)</span>
+y<span class="o">=</span><span class="kt">c</span><span class="p">(</span>fit<span class="o">$</span>b0<span class="p">[</span>g1<span class="p">],</span>fit<span class="o">$</span>b0<span class="p">[</span>g2<span class="p">],</span>fit<span class="o">$</span>b0<span class="p">[</span>g3<span class="p">],</span>fit<span class="o">$</span>b0<span class="p">[</span>g4<span class="p">])</span>
+
+plot<span class="p">(</span>x<span class="o">=</span>x<span class="p">,</span>y<span class="o">=</span>y<span class="p">,</span>pch<span class="o">=</span><span class="m">13</span><span class="p">,</span>lwd<span class="o">=</span><span class="m">2</span><span class="p">,</span>cex<span class="o">=</span><span class="m">2</span><span class="p">,</span>col<span class="o">=</span>cols<span class="p">[</span><span class="m">-1</span><span class="p">],</span>
+     xlim<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">100</span><span class="p">),</span>ylim<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="kp">max</span><span class="p">(</span>fit<span class="o">$</span>b0<span class="p">)),</span>
+     xaxt<span class="o">=</span><span class="s">&#39;n&#39;</span><span class="p">,</span>yaxt<span class="o">=</span><span class="s">&#39;n&#39;</span><span class="p">,</span>xlab<span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span>ylab<span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+
+lmda<span class="o">=</span><span class="kp">round</span><span class="p">(</span>fit<span class="o">$</span>lambda<span class="p">[</span><span class="kt">c</span><span class="p">(</span>g1<span class="p">,</span>g2<span class="p">,</span>g3<span class="p">,</span>g4<span class="p">)],</span><span class="m">2</span><span class="p">)</span>
+text<span class="p">(</span>x<span class="o">=</span>x<span class="m">-0.5</span><span class="p">,</span>y<span class="o">=</span>y<span class="m">+0.1</span><span class="p">,</span>labels<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;Group1&quot;</span><span class="p">,</span><span class="s">&quot;Group2&quot;</span><span class="p">,</span><span class="s">&quot;Group3&quot;</span><span class="p">,</span><span class="s">&quot;Group4&quot;</span><span class="p">),</span>pos<span class="o">=</span><span class="m">3</span><span class="p">,</span>cex<span class="o">=</span><span class="m">0.9</span><span class="p">)</span>
+text<span class="p">(</span>x<span class="o">=</span>x<span class="m">-0.5</span><span class="p">,</span>y<span class="o">=</span>y<span class="m">-0.1</span><span class="p">,</span>labels<span class="o">=</span><span class="kp">paste</span><span class="p">(</span><span class="s">&quot;Lambda\n=&quot;</span><span class="p">,</span>lmda<span class="p">),</span>pos<span class="o">=</span><span class="m">1</span><span class="p">,</span>cex<span class="o">=</span><span class="m">0.8</span><span class="p">)</span></code></pre></figure>
+
+<p><img src="/assets/figures/GroupLasso/unnamed-chunk-3-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
+
+<p>The intercept is not penalized and hence is always present in the regression equation. But as the plot above shows, each group enters the regression equation at a particular value of lambda. For example:</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r">coef.mat<span class="p">[,</span><span class="kt">c</span><span class="p">(</span><span class="m">12</span><span class="p">,</span><span class="m">13</span><span class="p">,</span><span class="m">14</span><span class="p">)]</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">##                                                     s11          s12
+## Real.GDP.Growth                             0.000000000  0.000000000
+## Real.Disposable.Income.Growth               0.000000000  0.000000000
+## CPI.Inflation.Rate                          0.000000000  0.000000000
+## X3.Month.Treasury                           0.000000000  0.000000000
+## X5.Year.Treasury                            0.000000000  0.000000000
+## X10.Year.Treausry                           0.000000000  0.000000000
+## BBB.Corporate.Yield                         0.000000000  0.000000000
+## Mortgage.Rate                               0.000000000  0.000000000
+## Prime.Rate                                  0.000000000  0.000000000
+## House.Price.Index.pct.chg                   0.000000000  0.000000000
+## Commercial.Real.Estate.Price.Index.pct.chg  0.000000000  0.000000000
+## Market.Volatility.Index..VIX..pct.chg      -0.002530964 -0.002655155
+## Dow.Jones.Total.Stock.Market.Index.pct.chg  0.002571568  0.002952220
+##                                                     s13
+## Real.GDP.Growth                             0.000000000
+## Real.Disposable.Income.Growth               0.000000000
+## CPI.Inflation.Rate                          0.000000000
+## X3.Month.Treasury                           0.000000000
+## X5.Year.Treasury                            0.000000000
+## X10.Year.Treausry                           0.000000000
+## BBB.Corporate.Yield                         0.000000000
+## Mortgage.Rate                              -0.003270736
+## Prime.Rate                                 -0.005926023
+## House.Price.Index.pct.chg                  -0.001951581
+## Commercial.Real.Estate.Price.Index.pct.chg -0.004634945
+## Market.Volatility.Index..VIX..pct.chg      -0.002592666
+## Dow.Jones.Total.Stock.Market.Index.pct.chg  0.003267311</code></pre></figure>
+
+<p>Note how at step = 13 group 3 enters the regression equation and all the variables in group3 have coefficients &gt; 0. Group4 was already in the regression equation starting at step = 1 (see plot)</p>
+
+<p>Hence, group4 enters the regression first, then group3, then group1 and group2 enters last.</p>
+
+<p>Let’s get to cross validation and some forward looking projections.</p>
+
+<h2 id="cross-validation-and-inferences">Cross Validation and Inferences</h2>
+<p>Thankfully the <strong>gglasso</strong> package has a built in function that provides cross validation capabilities.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Cross Validation</span>
+fit.cv<span class="o">=</span>cv.gglasso<span class="p">(</span>x<span class="o">=</span>X<span class="p">,</span>y<span class="o">=</span>Y<span class="p">,</span>group<span class="o">=</span>grp<span class="p">,</span>nfolds<span class="o">=</span><span class="m">10</span><span class="p">)</span>
+plot<span class="p">(</span>fit.cv<span class="p">)</span></code></pre></figure>
+
+<p><img src="/assets/figures/GroupLasso/unnamed-chunk-5-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Pick the best Lambda</span>
+lmbda<span class="o">=</span>fit.cv<span class="o">$</span>lambda.1se
+<span class="p">(</span>coefs<span class="o">=</span>coef.gglasso<span class="p">(</span>object<span class="o">=</span>fit<span class="p">,</span>s<span class="o">=</span>lmbda<span class="p">))</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">##                                                       1
+## (Intercept)                                15.603969368
+## Real.GDP.Growth                             0.093737728
+## Real.Disposable.Income.Growth              -0.016536569
+## CPI.Inflation.Rate                         -0.016866825
+## X3.Month.Treasury                          -0.098563832
+## X5.Year.Treasury                            0.419097056
+## X10.Year.Treausry                           1.125019983
+## BBB.Corporate.Yield                         0.222636779
+## Mortgage.Rate                              -2.325980613
+## Prime.Rate                                 -0.608963096
+## House.Price.Index.pct.chg                  -0.231779631
+## Commercial.Real.Estate.Price.Index.pct.chg -0.012288433
+## Market.Volatility.Index..VIX..pct.chg       0.007157314
+## Dow.Jones.Total.Stock.Market.Index.pct.chg  0.016550570</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#At best lambda get coefficients and fitted values</span>
+plt<span class="o">=</span><span class="kp">cbind</span><span class="p">(</span>Y<span class="p">,</span>predict.gglasso<span class="p">(</span>object<span class="o">=</span>fit<span class="p">,</span>newx<span class="o">=</span>X<span class="p">,</span>s<span class="o">=</span>lmbda<span class="p">,</span>type<span class="o">=</span><span class="s">&#39;link&#39;</span><span class="p">))</span>
+matplot<span class="p">(</span>plt<span class="p">,</span>main<span class="o">=</span><span class="s">&quot;Predicted vs Actual&quot;</span><span class="p">,</span>type<span class="o">=</span><span class="s">&#39;l&#39;</span><span class="p">,</span>lwd<span class="o">=</span><span class="m">2</span><span class="p">,</span>col<span class="o">=</span>cols<span class="p">[</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)],</span>
+        ylab<span class="o">=</span><span class="s">&quot;Unemplyoment %&quot;</span><span class="p">,</span>
+        xlab<span class="o">=</span><span class="s">&quot;Time&quot;</span><span class="p">)</span>
+grid<span class="p">()</span>
+legend<span class="p">(</span>x<span class="o">=</span><span class="m">40</span><span class="p">,</span>y<span class="o">=</span><span class="m">5</span><span class="p">,</span>legend<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;Actual&quot;</span><span class="p">,</span><span class="s">&quot;Predicted&quot;</span><span class="p">),</span>fill<span class="o">=</span><span class="kt">c</span><span class="p">(</span>cols<span class="p">[</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)]),</span>bty<span class="o">=</span><span class="s">&quot;n&quot;</span><span class="p">,</span>cex<span class="o">=</span><span class="m">0.7</span><span class="p">)</span></code></pre></figure>
+
+<p><img src="/assets/figures/GroupLasso/unnamed-chunk-5-2.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
+
+<p>Let’s now try to generate some forward looking projections and compare them against what the Fed has provided us.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Get forward looking projections</span>
+X<span class="o">=</span><span class="kp">as.matrix</span><span class="p">(</span>proj<span class="p">[,</span><span class="o">-</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">4</span><span class="p">)])</span>
+plt<span class="o">=</span><span class="kp">cbind</span><span class="p">(</span>proj<span class="o">$</span>Unemployment.Rate<span class="p">,</span>predict.gglasso<span class="p">(</span>object<span class="o">=</span>fit<span class="p">,</span>newx<span class="o">=</span>X<span class="p">,</span>s<span class="o">=</span>lmbda<span class="p">,</span>type<span class="o">=</span><span class="s">&#39;link&#39;</span><span class="p">))</span>
+matplot<span class="p">(</span>plt<span class="p">,</span>main<span class="o">=</span><span class="s">&quot;Predicted vs Fed Projections&quot;</span><span class="p">,</span>type<span class="o">=</span><span class="s">&#39;l&#39;</span><span class="p">,</span>lwd<span class="o">=</span><span class="m">2</span><span class="p">,</span>col<span class="o">=</span>cols<span class="p">[</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)],</span>
+        ylab<span class="o">=</span><span class="s">&quot;Unemplyoment %&quot;</span><span class="p">,</span>
+        xlab<span class="o">=</span><span class="s">&quot;Time&quot;</span><span class="p">)</span>
+grid<span class="p">()</span>
+legend<span class="p">(</span>x<span class="o">=</span><span class="m">10</span><span class="p">,</span>y<span class="o">=</span><span class="m">8</span><span class="p">,</span>legend<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;Fed Projection&quot;</span><span class="p">,</span><span class="s">&quot; Our Prediction&quot;</span><span class="p">),</span>
+       fill<span class="o">=</span><span class="kt">c</span><span class="p">(</span>cols<span class="p">[</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)]),</span>bty<span class="o">=</span><span class="s">&quot;n&quot;</span><span class="p">,</span>cex<span class="o">=</span><span class="m">0.7</span><span class="p">)</span></code></pre></figure>
+
+<p><img src="/assets/figures/GroupLasso/unnamed-chunk-6-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
+
+<p>Note that since we used a group penalty, the model has all the groups and hence all the variables are in the regression equation. The jaggedness of the predicted line does point towards some overfitting. But we can draw some interesting conclusions from this exercise.</p>
+
+<p>Remember our groupings:</p>
+
+<ul>
+  <li>GDP, income and inflation rate as <em>Group1</em></li>
+  <li>All treasury yields and BBB Corporate yield as <em>Group2</em></li>
+  <li>Mortage rate, prime rate ,HPI % change and commercial RE % change as <em>Group3</em></li>
+  <li>Dow Jones and VIX as <em>Group4</em></li>
+</ul>
+
+<p>Group4 is made of the two variables which are direct indicators of market conditions. Group3 variables reflect housing market conditions. National income and personal income make up group1 and interest rates make up group2. It does make sense that market conditions would have a dominant effect on employment conditions. The housing market is also dependent on employment conditions and vice versa.</p>
+
+<p>I am sure this analysis could have been done better but I hope this made sense and was helpful. I’ll follow this up with a post on sparse group lasso. Let me know what you think in the comments below !</p>
+
+<p><strong>Credits:</strong></p>
+
+<ul>
+  <li><a href="http://yihui.name/knitr/">Knitr</a>: <em>Yihui Xie</em></li>
+  <li><a href="http://cran.r-project.org/web/packages/gglasso/gglasso.pdf">Gglasso</a>: <em>Yi Yang and Hui Zou</em></li>
+  <li><a href="http://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf">RColorBrewer</a>: <em>Erich Neuwirth</em></li>
+  <li><a href="http://cran.r-project.org/web/packages/zoo/zoo.pdf">Zoo</a>: <em>Achim Zeileis Gabor Grothendieck, Jeffrey A. Ryan, Felix Andrews</em></li>
+</ul>
+
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'royr2'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/12/29/HappyNewYear.html">
+            Happy New Year using a Heatmap !?
+            <small>29 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2014/10/20/RChart.html">
+            RCharts
+            <small>20 Oct 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2014/09/15/lm-vs-lmRob.html">
+            lm() vs lmRob()
+            <small>15 Sep 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+<!--Google Analytics--->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-57026003-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>

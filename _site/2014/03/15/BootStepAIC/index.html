@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  
+  <title>
+    Bootstrapping StepAIC() &middot; 
+    A personal Blog
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.png">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+ 
+   <body>
+
+    <header class="masthead">
+      <div class="masthead-inner">
+        <h1><a href = "/">R&sup2</a></h1>
+        <p class="lead">R, Finance and statistics</p>
+
+        <div class="colophon">
+          <ul class="colophon-links">
+            <li>
+              View project on <a href="https://github.com/royr2/royr2.github.io">GitHub</a>
+            </li>
+			<li><a href="http://www.linkedin.com/in/riddhimanr"><b>Linkedin</b></a><li>
+		  </ul>
+		  
+			Built using <a href = "http://jekyllrb.com"> jekyll </a> and <a href = "http://andhyde.com/"> hyde</a>
+        </div>
+	  </div>
+    </header>
+
+    <div class="content container">
+      <div class="post">
+  <h1>Bootstrapping StepAIC()</h1>
+  <span class="post-date">15 Mar 2014</span>
+  <p>I work in the field of finance and find that people often rely on OLS regressions for doing predictive analysis. It’s easy to implement and everyone knows about it. OLS regression gives us a very well developed mathematical framework which can be used to develop linear relationships. These relationships can then be used to create forward looking projections. But what about the features? How does one go about selecting the right feature set which can be used to reliably predict the variable under consideration?</p>
+
+<p>Stepwise variable selection is one of the most commonly used variable selection algorithms. The reliability of stepwise and or subset selection techniques is debatable. If you are a statistician chances are you are not a big fan of such algorithms. None the less, such techniques are popular and I have come across a lot of people using them.</p>
+
+<p>One of the ways one could make the stepwise selection process more reliable is by bootstrapping it.  The process can be broken down into the following steps:</p>
+
+<ol>
+  <li>Select a random subset from your data set</li>
+  <li>Run stepwise selection on this subset</li>
+  <li>Record the features that were selected</li>
+  <li>Repeat steps 1 to 3 many times</li>
+</ol>
+
+<p>The end result is that now we can see how many times a specific feature (predictor variable) gets selected. Now, this bootstrapping technique just creates a random data set from the given data set (drawing with replacement). One could try to run a bootstrap procedure by creating a random starting point for the stepwise algorithm to work on.</p>
+
+<p>Hopefully this little extra step would give you some insight as to which predictor variables could be most useful.</p>
+
+<p>The bootStepAIC package is written by ‘Dimitris Rizopoulos’.</p>
+
+<h2 id="r-code">R Code</h2>
+
+<h3 id="data-loading-and-exploratory-analysis">Data loading and exploratory analysis</h3>
+
+<p>The following code snippets follow the post above. For this simple example I’ll use the <strong>Managers</strong> data set in the <strong>Performance Analytics</strong> package.</p>
+
+<p>Lets first install the required package.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Install the package called "Performance Analytics"
+</span><span class="n">install.packages</span><span class="p">(</span><span class="s2">"PerformanceAnalytics"</span><span class="p">,</span><span class="n">repos</span><span class="o">=</span><span class="s2">"http://cran.us.r-project.org"</span><span class="p">)</span>
+
+<span class="c1">#Loads package into memory
+</span><span class="n">library</span><span class="p">(</span><span class="n">PerformanceAnalytics</span><span class="p">)</span>
+
+<span class="c1">#Load 'Managers' dataset
+</span><span class="n">data</span><span class="p">(</span><span class="n">managers</span><span class="p">)</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#The data sets looks like this
+</span><span class="n">head</span><span class="p">(</span><span class="n">managers</span><span class="p">)</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">##               HAM1 HAM2    HAM3    HAM4 HAM5 HAM6 EDHEC LS EQ SP500 TR
+## 1996-01-31  0.0074   NA  0.0349  0.0222   NA   NA          NA   0.0340
+## 1996-02-29  0.0193   NA  0.0351  0.0195   NA   NA          NA   0.0093
+## 1996-03-31  0.0155   NA  0.0258 -0.0098   NA   NA          NA   0.0096
+## 1996-04-30 -0.0091   NA  0.0449  0.0236   NA   NA          NA   0.0147
+## 1996-05-31  0.0076   NA  0.0353  0.0028   NA   NA          NA   0.0258
+## 1996-06-30 -0.0039   NA -0.0303 -0.0019   NA   NA          NA   0.0038
+##            US 10Y TR US 3m TR
+## 1996-01-31   0.00380  0.00456
+## 1996-02-29  -0.03532  0.00398
+## 1996-03-31  -0.01057  0.00371
+## 1996-04-30  -0.01739  0.00428
+## 1996-05-31  -0.00543  0.00443
+## 1996-06-30   0.01507  0.00412</code></pre></figure>
+
+<p>Now that we have the data set loaded up, we can do some basic exploratory analysis. The <strong>Managers</strong> data set is made of the following variables:</p>
+
+<ol>
+  <li><strong>Hedge Fund Returns</strong>
+    <ul>
+      <li>HAM1 to HAM 6</li>
+    </ul>
+  </li>
+  <li><strong>Risk Factors</strong>
+    <ul>
+      <li>EDHEC Long Short Equity</li>
+      <li>SP500</li>
+      <li>US 10 Year Treasury yield</li>
+      <li>US 3month Treasuty yield</li>
+    </ul>
+  </li>
+</ol>
+
+<p>Lets try to plot the kind of relationship <strong>HAM2</strong> has with each of the <strong>risk factors</strong>. We’ll use the <strong>pairs</strong> function.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Create a dataframe using HAM2 and the risk factors
+</span><span class="n">df</span><span class="o">=</span><span class="n">data.frame</span><span class="p">(</span><span class="n">managers</span><span class="p">[,</span><span class="n">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">7</span><span class="o">:</span><span class="m">10</span><span class="p">)])</span>
+
+<span class="c1">#The data frame should look like this
+</span><span class="n">head</span><span class="p">(</span><span class="n">df</span><span class="p">)</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">##            HAM2 EDHEC.LS.EQ SP500.TR US.10Y.TR US.3m.TR
+## 1996-01-31   NA          NA   0.0340   0.00380  0.00456
+## 1996-02-29   NA          NA   0.0093  -0.03532  0.00398
+## 1996-03-31   NA          NA   0.0096  -0.01057  0.00371
+## 1996-04-30   NA          NA   0.0147  -0.01739  0.00428
+## 1996-05-31   NA          NA   0.0258  -0.00543  0.00443
+## 1996-06-30   NA          NA   0.0038   0.01507  0.00412</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Pairs plot
+</span><span class="n">pairs</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">main</span><span class="o">=</span><span class="s2">"Pairs Plot for HAM2"</span><span class="p">,</span><span class="n">pch</span><span class="o">=</span><span class="m">16</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="s2">"slateblue"</span><span class="p">)</span></code></pre></figure>
+
+<p><img src="/assets/figures/BootStepAIC/managers-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
+
+<h3 id="variable-selection">Variable selection</h3>
+
+<p>Now for the fun part. As a simple example, lets try to use the avaliable risk factors to predict the returns for <strong>manager 2 (HAM2)</strong></p>
+
+<h3 id="lm-fit">LM Fit</h3>
+
+<p>As a first case, lets use all the available risk factors to predict future returns for <strong>HAM2</strong>. We’ll be using the <strong>lm</strong> function.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Formula for lm function
+</span><span class="n">form</span><span class="o">=</span><span class="n">formula</span><span class="p">(</span><span class="n">HAM2</span><span class="o">~</span><span class="n">EDHEC.LS.EQ</span> <span class="o">+</span> <span class="n">SP500.TR</span> <span class="o">+</span> <span class="n">US.10Y.TR</span> <span class="o">+</span> <span class="n">US.3m.TR</span><span class="p">)</span>
+<span class="n">fit</span><span class="o">=</span><span class="n">lm</span><span class="p">(</span><span class="n">form</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1">#The output from the summary function on a lm object should look like this
+</span><span class="n">summary</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">## 
+## Call:
+## lm(formula = form, data = df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.055374 -0.018682 -0.003635  0.013378  0.079518 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -0.005115   0.005328  -0.960   0.3390    
+## EDHEC.LS.EQ  1.539069   0.166290   9.255 1.41e-15 ***
+## SP500.TR    -0.193175   0.076937  -2.511   0.0134 *  
+## US.10Y.TR    0.045813   0.116777   0.392   0.6956    
+## US.3m.TR     1.429513   1.546454   0.924   0.3572    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.0253 on 115 degrees of freedom
+##   (12 observations deleted due to missingness)
+## Multiple R-squared:  0.5254,	Adjusted R-squared:  0.5089 
+## F-statistic: 31.83 on 4 and 115 DF,  p-value: &lt; 2.2e-16</code></pre></figure>
+
+<p>We didn’t do so bad. We got an R-Square of around <em>50%</em>. Our adjusted and multiple R-Square values are close to each other, we had enough degrees of freedom and most of our predictor variables are statistically significant.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Lets check fitted vs actual values
+</span><span class="n">plot</span><span class="p">(</span><span class="n">fit</span><span class="o">$</span><span class="n">model</span><span class="p">[,</span><span class="m">1</span><span class="p">],</span><span class="n">fit</span><span class="o">$</span><span class="n">fitted.values</span><span class="p">,</span>  
+     <span class="n">main</span><span class="o">=</span><span class="s2">"Actual vs Fitted values"</span><span class="p">,</span>  
+     <span class="n">pch</span><span class="o">=</span><span class="m">16</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="s2">"indianred"</span><span class="p">,</span><span class="n">cex</span><span class="o">=</span><span class="m">1.5</span><span class="p">,</span>  
+     <span class="n">xlab</span><span class="o">=</span><span class="s2">"Actual Values"</span><span class="p">,</span><span class="n">ylab</span><span class="o">=</span><span class="s2">"Fitted Values"</span><span class="p">)</span>  
+<span class="n">grid</span><span class="p">()</span>
+<span class="n">rstd</span><span class="o">=</span><span class="n">round</span><span class="p">(</span><span class="n">sd</span><span class="p">(</span><span class="n">fit</span><span class="o">$</span><span class="n">residuals</span><span class="p">),</span><span class="m">4</span><span class="p">)</span>
+<span class="n">legend</span><span class="p">(</span><span class="s2">"bottomleft"</span><span class="p">,</span>  
+       <span class="n">legend</span><span class="o">=</span><span class="n">paste</span><span class="p">(</span><span class="s2">"Residual std err = "</span><span class="p">,</span><span class="n">rstd</span><span class="p">),</span><span class="n">bty</span><span class="o">=</span><span class="s1">'n'</span><span class="p">)</span></code></pre></figure>
+
+<p><img src="/assets/figures/BootStepAIC/plot lm-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
+
+<h3 id="stepwise-selection">Stepwise Selection</h3>
+
+<p>Now lets see if we can improve on the model by removing any of the predictor variables. We’ll use the <strong>stepAIC</strong> function in the <strong>MASS</strong> package.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">install.packages</span><span class="p">(</span><span class="s2">"MASS"</span><span class="p">,</span><span class="n">repos</span><span class="o">=</span><span class="s2">"http://cran.us.r-project.org"</span><span class="p">)</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#"::" can be used to make a reference to a specific library
+#I am using trace = F to suppress the output from the stepAIC function
+</span><span class="n">stepfit</span><span class="o">=</span><span class="n">MASS</span><span class="o">::</span><span class="n">stepAIC</span><span class="p">(</span><span class="n">object</span><span class="o">=</span><span class="n">fit</span><span class="p">,</span><span class="n">scope</span><span class="o">=</span><span class="n">list</span><span class="p">(</span><span class="n">upper</span><span class="o">=~</span><span class="err">.</span><span class="p">,</span><span class="n">lower</span><span class="o">=~</span><span class="m">1</span><span class="p">),</span><span class="n">direction</span><span class="o">=</span><span class="s2">"backward"</span><span class="p">,</span><span class="n">trace</span><span class="o">=</span><span class="n">F</span><span class="p">)</span>
+<span class="n">summary</span><span class="p">(</span><span class="n">stepfit</span><span class="p">)</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">## 
+## Call:
+## lm(formula = HAM2 ~ EDHEC.LS.EQ + SP500.TR, data = df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.050498 -0.017211 -0.005262  0.012211  0.081154 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -0.0005315  0.0026008  -0.204  0.83843    
+## EDHEC.LS.EQ  1.5548911  0.1645687   9.448 4.35e-16 ***
+## SP500.TR    -0.2007421  0.0759434  -2.643  0.00933 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.02521 on 117 degrees of freedom
+##   (12 observations deleted due to missingness)
+## Multiple R-squared:  0.5208,	Adjusted R-squared:  0.5126 
+## F-statistic: 63.59 on 2 and 117 DF,  p-value: &lt; 2.2e-16</code></pre></figure>
+
+<p>In this case the stepwise procedure removes both the treasury variables to arrive at a slightly more parsimonious model containing only 2 variables.</p>
+
+<h3 id="comparison-table">Comparison Table</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Full Model</th>
+      <th>Trimmed Model</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>R-Squared</td>
+      <td>52.54%</td>
+      <td>52.08%</td>
+    </tr>
+    <tr>
+      <td>Adj R-Squared</td>
+      <td>50.89%</td>
+      <td>51.26</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Notice that even though we have only two predictor variables, the model’s predictive power hasn’t changed a lot.</p>
+
+<p>What if we wanted to add a treasury variable to the mix? Which one would you pick? If we had some prior knowledge regarding HAM2 portfolio holdings, we might be able to make a qualitative judgement regarding whether to use the 10 year or the 3 month treasury yield. If not, we could use the bootstrap procedure to derive some useful information.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Install the package
+</span><span class="n">install.packages</span><span class="p">(</span><span class="s2">"bootStepAIC"</span><span class="p">,</span><span class="n">repos</span><span class="o">=</span><span class="s2">"http://cran.us.r-project.org"</span><span class="p">)</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Run bootstrap procedure
+</span><span class="n">bootStepAIC</span><span class="o">::</span><span class="n">boot.stepAIC</span><span class="p">(</span><span class="n">object</span><span class="o">=</span><span class="n">fit</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">## 
+## Summary of Bootstrapping the 'stepAIC()' procedure for
+## 
+## Call:
+## lm(formula = form, data = df)
+## 
+## Bootstrap samples: 100 
+## Direction: backward 
+## Penalty: 2 * df
+## 
+## Covariates selected
+##             (%)
+## EDHEC.LS.EQ 100
+## SP500.TR     80
+## US.3m.TR     34
+## US.10Y.TR    20
+## 
+## Coefficients Sign
+##             + (%) - (%)
+## EDHEC.LS.EQ   100     0
+## US.3m.TR      100     0
+## US.10Y.TR      90    10
+## SP500.TR        0   100
+## 
+## Stat Significance
+##                (%)
+## EDHEC.LS.EQ 100.00
+## SP500.TR     81.25
+## US.10Y.TR    50.00
+## US.3m.TR     44.12
+## 
+## 
+## The stepAIC() for the original data-set gave
+## 
+## Call:
+## lm(formula = HAM2 ~ EDHEC.LS.EQ + SP500.TR, data = df)
+## 
+## Coefficients:
+## (Intercept)  EDHEC.LS.EQ     SP500.TR  
+##  -0.0005315    1.5548911   -0.2007421  
+## 
+## 
+## Stepwise Model Path 
+## Analysis of Deviance Table
+## 
+## Initial Model:
+## HAM2 ~ EDHEC.LS.EQ + SP500.TR + US.10Y.TR + US.3m.TR
+## 
+## Final Model:
+## HAM2 ~ EDHEC.LS.EQ + SP500.TR
+## 
+## 
+##          Step Df     Deviance Resid. Df Resid. Dev       AIC
+## 1                                   115 0.07362914 -877.5447
+## 2 - US.10Y.TR  1 9.853917e-05       116 0.07372768 -879.3843
+## 3  - US.3m.TR  1 6.114188e-04       117 0.07433909 -880.3932</code></pre></figure>
+
+<p>Let’s draw some observations from the above output:</p>
+
+<ul>
+  <li>EDHEC LS EQ is selected as a predictor everytime</li>
+  <li>US 3M TR is selected as a predictor 38% of the time (US 10Y TR is selected 21% of the time)</li>
+  <li>Coefficient sign on the treasury variables suggest a positive relationship (since 90-95% of the time the coefficients were positive in nature)</li>
+  <li>US 3m TR had a statistically significant coefficient 53.33% of the time</li>
+</ul>
+
+<p>The above observations can make it easier for us to decide which of the two treasury variables we could use as a possible predictor. We could also use this information to align our view regarding the HAM2 portfolio. If the portfolio is supposed to be more sensitive towards short term interest rates then this quantitative analysis supports that view.</p>
+
+<p>This really was a simple example but hopefully I was able to get my point across. <br />
+Feel free to leave comments below. Thanks !</p>
+
+<p>Credits:</p>
+
+<ul>
+  <li><a href="http://yihui.name/knitr/">Knitr</a>: <em>Yihui Xie</em></li>
+  <li><a href="http://cran.r-project.org/web/packages/PerformanceAnalytics/index.html">Performance Analytics</a>: <em>Peter Carl and Brian Peterson</em></li>
+  <li><a href="http://cran.r-project.org/web/packages/MASS/index.html">MASS</a>  : <em>Brian Ripley</em></li>
+</ul>
+
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'royr2'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/12/29/HappyNewYear/">
+            Happy New Year using a Heatmap !?
+            <small>29 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2014/10/20/RChart/">
+            RCharts
+            <small>20 Oct 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2014/09/15/lm-vs-lmRob/">
+            lm() vs lmRob()
+            <small>15 Sep 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+<!--Google Analytics--->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-57026003-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  
+  <title>
+    Lasso and Ridge Regression &middot; 
+    A personal Blog
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.png">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+ 
+   <body>
+
+    <header class="masthead">
+      <div class="masthead-inner">
+        <h1><a href = "/">R&sup2</a></h1>
+        <p class="lead">R, Finance and statistics</p>
+
+        <div class="colophon">
+          <ul class="colophon-links">
+            <li>
+              View project on <a href="https://github.com/royr2/royr2.github.io">GitHub</a>
+            </li>
+			<li><a href="http://www.linkedin.com/in/riddhimanr"><b>Linkedin</b></a><li>
+		  </ul>
+		  
+			Built using <a href = "http://jekyllrb.com"> jekyll </a> and <a href = "http://andhyde.com/"> hyde</a>
+        </div>
+	  </div>
+    </header>
+
+    <div class="content container">
+      <div class="post">
+  <h1>Lasso and Ridge Regression</h1>
+  <span class="post-date">30 Mar 2014</span>
+  <p>I wanted to follow up on my last post with a post on using <strong>Ridge and Lasso regression</strong> . <strong>Lasso</strong> can also be used for <strong>variable selection</strong>.</p>
+
+<p><a href="http://www.stat.cmu.edu/~ryantibs/datamining/lectures/16-modr1.pdf"><strong>Ridge regression</strong></a> modifies the <em>least squares</em> objective function by adding to it a penalty term (<em>L2 Norm</em>). Hence, the objective function that needs to be minimized can be given as:</p>
+
+<script type="math/tex; mode=display">\sum_{i}(y_i-x^T\beta)^2+\lambda\sum_{j=1}^{p}\beta_j^2</script>
+
+<p>The penalty term shrinks the coefficients in the final regression equation. (\lambda) decides how small the coefficients will be. Larger the value of <script type="math/tex">\lambda</script> smaller the coefficients.</p>
+
+<p><em>Ridge regression</em> cannot be used for variable selection in its truest sense but can be used to derive some inferences about the predictor variables. We can fine tune the <script type="math/tex">\lambda</script> parameter to drive the coefficients of a few variables to be very small, thereby having some control on the number of variables having significantly large coefficients.</p>
+
+<p>Note that since <em>ridge regression</em> uses the <em>L2</em> norm, the coefficients will <em>not exactly equal zero</em>. So, as a final step we could either choose to ignore those variables that have very small coefficients and fit our model just using the remaining variables and get a clean model or, keep the output from ridge regression as is.</p>
+
+<p><a href="http://statweb.stanford.edu/~tibs/lasso/lasso.pdf"><strong>Lasso</strong></a> is very similar to <em>ridge regression</em>. The only differ<em>ence being the penalty that is added to the *least squares</em> objective function. <em>Lasso</em> uses the <em>L1</em> norm instead. The objective function looks like this:</p>
+
+<script type="math/tex; mode=display">sum_{i}(y_i-x^T\beta)^2+\lambda\sum_{j=1}^{p}\ |beta_j|</script>
+
+<p>The one advantage <em>lasso</em> has over <em>ridge regression</em> is that coefficients can <em>exactly equal  zero</em>. This property of the <em>L1 norm</em> is why <em>lasso</em> can be used for <em>continuous variable selection</em>.</p>
+
+<p>Now let’s look at some R code to help implement these two bad boys.</p>
+
+<p>We’ll be using the following packages:</p>
+
+<ul>
+  <li><a href="http://cran.r-project.org/web/packages/PerformanceAnalytics/index.html">Performance Analytics</a></li>
+  <li><a href="http://cran.r-project.org/web/packages/MASS/index.html">MASS</a></li>
+  <li><a href="http://cran.r-project.org/web/packages/lars/lars.pdf">LARS</a></li>
+</ul>
+
+<h2 id="r-code">R-Code</h2>
+
+<h3 id="data-and-libraries">Data and Libraries</h3>
+<p>Let’s install and load up the needed libraies and data sets first.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Load library
+#install.packages(c("PerformanceAnalytics","MASS","lars"))
+</span><span class="n">library</span><span class="p">(</span><span class="n">PerformanceAnalytics</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">MASS</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">lars</span><span class="p">)</span>
+<span class="n">data</span><span class="p">(</span><span class="n">managers</span><span class="p">)</span></code></pre></figure>
+
+<p>Ridge is up first. The <em>MASS</em> package has an implementation called <em>lm.ridge</em>. Let’s use that here.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Fit the model first without specifying the lambda parameter
+</span><span class="n">fit.ridge</span> <span class="o">&lt;-</span> <span class="n">lm.ridge</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">HAM2</span><span class="o">~</span><span class="err">.</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">managers</span><span class="p">[,</span><span class="n">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">7</span><span class="o">:</span><span class="m">10</span><span class="p">)])</span>
+
+<span class="c1">#OLS regression
+</span><span class="n">fit.ols</span> <span class="o">&lt;-</span> <span class="n">lm</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">HAM2</span><span class="o">~</span><span class="err">.</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">managers</span><span class="p">[,</span><span class="n">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">7</span><span class="o">:</span><span class="m">10</span><span class="p">)])</span>
+
+<span class="c1">#Let's compare the Coefficients
+</span><span class="n">table</span><span class="o">=</span><span class="n">cbind</span><span class="p">(</span><span class="n">coef</span><span class="p">(</span><span class="n">fit.ridge</span><span class="p">),</span><span class="n">coef</span><span class="p">(</span><span class="n">fit.ols</span><span class="p">))</span>
+<span class="n">colnames</span><span class="p">(</span><span class="n">table</span><span class="p">)</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="s2">"Ridge"</span><span class="p">,</span><span class="s2">"OLS"</span><span class="p">)</span>
+<span class="n">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">##                     Ridge         OLS
+##               -0.00511546 -0.00511546
+## `EDHEC LS EQ`  1.53906910  1.53906910
+## `SP500 TR`    -0.19317529 -0.19317529
+## `US 10Y TR`    0.04581282  0.04581282
+## `US 3m TR`     1.42951282  1.42951282</code></pre></figure>
+
+<p>This clearly shows that at the heart of ridge regression sits good old <em>OLS</em> :-)<br />
+Now let’s see how the <script type="math/tex">\lambda</script> parameter affects the coefficients.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Let's start with a random value of Lambda
+</span><span class="n">fit.ridge</span> <span class="o">&lt;-</span> <span class="n">lm.ridge</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">HAM2</span><span class="o">~</span><span class="err">.</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">managers</span><span class="p">[,</span><span class="n">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">7</span><span class="o">:</span><span class="m">10</span><span class="p">)],</span><span class="n">lambda</span><span class="o">=</span><span class="m">100</span><span class="p">)</span>
+
+<span class="n">table</span><span class="o">=</span><span class="n">cbind</span><span class="p">(</span><span class="n">coef</span><span class="p">(</span><span class="n">fit.ridge</span><span class="p">),</span><span class="n">coef</span><span class="p">(</span><span class="n">fit.ols</span><span class="p">))</span>
+<span class="n">colnames</span><span class="p">(</span><span class="n">table</span><span class="p">)</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="s2">"Lambda=100"</span><span class="p">,</span><span class="s2">"OLS"</span><span class="p">)</span>
+<span class="n">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">##                Lambda=100         OLS
+##               0.002125474 -0.00511546
+## `EDHEC LS EQ` 0.617579990  1.53906910
+## `SP500 TR`    0.061262635 -0.19317529
+## `US 10Y TR`   0.005726839  0.04581282
+## `US 3m TR`    1.357404708  1.42951282</code></pre></figure>
+
+<p>Note the coefficients have shrunk in value. Let’s try to do the same for multiple values of <script type="math/tex">\lambda</script></p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Let's start with a random value of Lambda
+</span><span class="n">fit.ridge</span> <span class="o">&lt;-</span> <span class="n">lm.ridge</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">HAM2</span><span class="o">~</span><span class="err">.</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">managers</span><span class="p">[,</span><span class="n">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">7</span><span class="o">:</span><span class="m">10</span><span class="p">)],</span><span class="n">lambda</span><span class="o">=</span><span class="n">seq</span><span class="p">(</span><span class="n">from</span><span class="o">=</span><span class="m">0</span><span class="p">,</span><span class="n">to</span><span class="o">=</span><span class="m">100</span><span class="p">,</span><span class="n">by</span><span class="o">=</span><span class="m">1</span><span class="p">))</span>
+
+<span class="c1">#Let's plot this information
+</span><span class="n">matplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">t</span><span class="p">(</span><span class="n">fit.ridge</span><span class="o">$</span><span class="n">coef</span><span class="p">),</span><span class="n">type</span><span class="o">=</span><span class="s1">'l'</span><span class="p">,</span>
+        <span class="n">main</span><span class="o">=</span><span class="s2">"Ridge Regression Lambda vs Coefficient Plot"</span><span class="p">,</span>
+        <span class="n">xlab</span><span class="o">=</span><span class="s2">"Lambda Values"</span><span class="p">,</span>
+        <span class="n">ylab</span><span class="o">=</span><span class="s2">"Coefficients"</span><span class="p">,</span>
+        <span class="n">col</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="s2">"black"</span><span class="p">,</span><span class="s2">"red"</span><span class="p">,</span><span class="s2">"blue"</span><span class="p">,</span><span class="s2">"green"</span><span class="p">))</span>
+<span class="n">grid</span><span class="p">()</span>
+<span class="n">legend</span><span class="p">(</span><span class="s2">"topright"</span><span class="p">,</span><span class="n">legend</span><span class="o">=</span><span class="n">rownames</span><span class="p">(</span><span class="n">fit.ridge</span><span class="o">$</span><span class="n">coef</span><span class="p">),</span>  
+       <span class="n">fill</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="s2">"black"</span><span class="p">,</span><span class="s2">"red"</span><span class="p">,</span><span class="s2">"blue"</span><span class="p">,</span><span class="s2">"green"</span><span class="p">),</span>
+       <span class="n">bty</span><span class="o">=</span><span class="s1">'n'</span><span class="p">,</span>
+       <span class="n">cex</span><span class="o">=</span><span class="m">1</span><span class="p">)</span></code></pre></figure>
+
+<p><img src="/assets/figures/LassoRidge/unnamed-chunk-4-1.png" title="center" alt="center" style="display: block; margin: auto;" />
+The plot is self explanatory and shows how coefficients are affected as <script type="math/tex">\lambda</script> increases. This clearly shows that <em>EDHEC LS EQ</em> and <em>SP500</em> are the two most important predictor variables as far as predicting <em>HAM 2</em> returns are concerned. This is also supported by the stepwise variable selection process (see below).</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">bootStepAIC</span><span class="o">::</span><span class="n">boot.stepAIC</span><span class="p">(</span><span class="n">object</span><span class="o">=</span><span class="n">fit.ols</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">data.frame</span><span class="p">(</span><span class="n">managers</span><span class="p">[,</span><span class="n">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">7</span><span class="o">:</span><span class="m">10</span><span class="p">)]))</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">## 
+## Summary of Bootstrapping the 'stepAIC()' procedure for
+## 
+## Call:
+## lm(formula = HAM2 ~ ., data = managers[, c(2, 7:10)])
+## 
+## Bootstrap samples: 100 
+## Direction: backward 
+## Penalty: 2 * df
+## 
+## Covariates selected
+##             (%)
+## EDHEC.LS.EQ 100
+## SP500.TR     79
+## US.3m.TR     31
+## US.10Y.TR    24
+## 
+## Coefficients Sign
+##              + (%)  - (%)
+## EDHEC.LS.EQ 100.00   0.00
+## US.3m.TR    100.00   0.00
+## US.10Y.TR    83.33  16.67
+## SP500.TR      0.00 100.00
+## 
+## Stat Significance
+##                (%)
+## EDHEC.LS.EQ 100.00
+## SP500.TR     82.28
+## US.3m.TR     41.94
+## US.10Y.TR    20.83
+## 
+## 
+## The stepAIC() for the original data-set gave
+## 
+## Call:
+## lm(formula = HAM2 ~ `EDHEC LS EQ` + `SP500 TR`, data = managers[, 
+##     c(2, 7:10)])
+## 
+## Coefficients:
+##   (Intercept)  `EDHEC LS EQ`     `SP500 TR`  
+##    -0.0005315      1.5548911     -0.2007421  
+## 
+## 
+## Stepwise Model Path 
+## Analysis of Deviance Table
+## 
+## Initial Model:
+## HAM2 ~ `EDHEC LS EQ` + `SP500 TR` + `US 10Y TR` + `US 3m TR`
+## 
+## Final Model:
+## HAM2 ~ `EDHEC LS EQ` + `SP500 TR`
+## 
+## 
+##            Step Df     Deviance Resid. Df Resid. Dev       AIC
+## 1                                     115 0.07362914 -877.5447
+## 2 - `US 10Y TR`  1 9.853917e-05       116 0.07372768 -879.3843
+## 3  - `US 3m TR`  1 6.114188e-04       117 0.07433909 -880.3932</code></pre></figure>
+
+<h3 id="lasso">LASSO</h3>
+<p>Now let’s quickly review the LASSO implementation. This is provided by the <strong>LARS</strong> package. Again let’s first see if we can get back the OLS estimates from <em>Lasso</em>.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">library</span><span class="p">(</span><span class="n">lars</span><span class="p">)</span>
+<span class="c1">#Matrix of predictors and center
+</span><span class="n">df</span><span class="o">=</span><span class="n">data.frame</span><span class="p">(</span><span class="n">na.omit</span><span class="p">(</span><span class="n">managers</span><span class="p">[,</span><span class="n">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">7</span><span class="o">:</span><span class="m">10</span><span class="p">)]))</span>
+<span class="n">x</span><span class="o">=</span><span class="n">as.matrix</span><span class="p">(</span><span class="n">cbind</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="n">df</span><span class="p">[,</span><span class="m">-1</span><span class="p">]))</span>
+
+<span class="c1">#Response variable
+</span><span class="n">y</span><span class="o">=</span><span class="n">as.numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[,</span><span class="m">1</span><span class="p">])</span>
+
+<span class="c1">#Lasso fit
+</span><span class="n">fit.lasso</span><span class="o">=</span><span class="n">lars</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s2">"lasso"</span><span class="p">,</span><span class="n">normalize</span><span class="o">=</span><span class="n">F</span><span class="p">,</span><span class="n">intercept</span><span class="o">=</span><span class="n">F</span><span class="p">)</span>
+
+<span class="n">table</span><span class="o">=</span><span class="n">cbind</span><span class="p">(</span><span class="n">coef.lars</span><span class="p">(</span><span class="n">fit.lasso</span><span class="p">,</span><span class="n">s</span><span class="o">=</span><span class="m">0</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s2">"lambda"</span><span class="p">),</span>
+            <span class="n">coef</span><span class="p">(</span><span class="n">fit.ols</span><span class="p">))</span>
+<span class="n">colnames</span><span class="p">(</span><span class="n">table</span><span class="p">)</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="s2">"LASSO"</span><span class="p">,</span><span class="s2">"OLS"</span><span class="p">)</span>
+
+<span class="c1">#And if there is any justice in this world these should be equal
+</span><span class="n">table</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">##                   LASSO         OLS
+## 1           -0.00511546 -0.00511546
+## EDHEC.LS.EQ  1.53906910  1.53906910
+## SP500.TR    -0.19317529 -0.19317529
+## US.10Y.TR    0.04581282  0.04581282
+## US.3m.TR     1.42951282  1.42951282</code></pre></figure>
+
+<p>As expected, we’ll get back the OLS estimates if the penalty parameter <script type="math/tex">\lambda</script> = 0 yay !</p>
+
+<p><strong>Caveat</strong><br />
+Please note that we chose <strong>not to normalize</strong> the predictor variables as shown in the code snippet(s) above. This was just to show that the <em>lasso</em> will return the standard <em>ols</em> estimates if <script type="math/tex">\lambda</script>=0. This is <strong>not ideal</strong>. Both <em>L1 and L2</em> norms will not penalize the predictor variables equally if they are not on the same scale. Ideally, the predictors should be normalized and centered before running lasso/ridge.</p>
+
+<p>Now let’s see what happens when we increase the value of lambda. The lars function generates estimates for all possible values of (\lambda). Hence, once the fitting is done its just a matter of extracting the required coefficients at a particular (\lambda). This can be done using the <strong>coef.lars()</strong> function.</p>
+
+<p>Let’s visualize the <em>lasso path</em> first. This time we’ll be normalizing the predictors and centering the design matrix to conform to generally accepted practices (see <a href="http://www.stat.cmu.edu/~ryantibs/datamining/lectures/17-modr2-marked.pdf">link</a>).</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Center
+</span><span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="o">-</span><span class="n">apply</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="n">mean</span><span class="p">)</span>
+<span class="c1">#Fit Lasso
+</span><span class="n">fit.lasso</span><span class="o">=</span><span class="n">lars</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df</span><span class="p">[,</span><span class="m">-1</span><span class="p">],</span><span class="n">y</span><span class="o">=</span><span class="n">df</span><span class="p">[,</span><span class="m">1</span><span class="p">],</span><span class="n">type</span><span class="o">=</span><span class="s2">"lasso"</span><span class="p">,</span><span class="n">trace</span><span class="o">=</span><span class="n">F</span><span class="p">,</span><span class="n">normalize</span><span class="o">=</span><span class="n">T</span><span class="p">,</span><span class="n">intercept</span><span class="o">=</span><span class="n">F</span><span class="p">)</span>
+<span class="c1">#Plot Lasso Path
+</span><span class="n">plot</span><span class="p">(</span><span class="n">fit.lasso</span><span class="p">)</span></code></pre></figure>
+
+<p><img src="/assets/figures/LassoRidge/unnamed-chunk-7-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
+
+<p>The plot is easy enough to interpret. Note that the x-axis is the <em>fraction of L1 norm</em> and not <script type="math/tex">\lambda</script>. Hence, when <script type="math/tex">\lambda=0</script> <script type="math/tex">\frac{\beta}{max(\beta)}</script>=1. So, as <script type="math/tex">\lambda</script> goes to zero, more and more variables enter the regression equation.</p>
+
+<p>To see the relationship between <script type="math/tex">\lambda</script> and <script type="math/tex">\frac{\beta}{max(\beta)}</script> see the following code snippet. By trial and error I was able to find out that variable 3 (<em>US 10Y TR</em>) enters the equation at <script type="math/tex">\lambda</script>=0.0096. From there I can back into the <em>L1 fraction</em>.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Get coefficients at lambda=0 (Max coefficient values)
+</span><span class="n">coef.max</span><span class="o">=</span><span class="n">coef.lars</span><span class="p">(</span><span class="n">fit.lasso</span><span class="p">,</span><span class="n">s</span><span class="o">=</span><span class="m">0</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s2">"lambda"</span><span class="p">)</span>
+<span class="n">maxL1norm</span><span class="o">=</span><span class="n">sum</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">coef.max</span><span class="p">))</span>
+
+<span class="c1">#Get coefficients at lambda = 0.0096
+</span><span class="p">(</span><span class="n">coef.lambda</span><span class="o">=</span><span class="n">coef.lars</span><span class="p">(</span><span class="n">fit.lasso</span><span class="p">,</span><span class="n">s</span><span class="o">=</span><span class="m">0.0096</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s2">"lambda"</span><span class="p">))</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">##  EDHEC.LS.EQ     SP500.TR    US.10Y.TR     US.3m.TR 
+##  1.408227814 -0.131437233  0.007295828 -0.158764030</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">L1norm</span><span class="o">=</span><span class="n">sum</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">coef.lambda</span><span class="p">))</span>
+<span class="n">L1norm</span><span class="o">/</span><span class="n">maxL1norm</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">## [1] 0.7874097</code></pre></figure>
+
+<p>This is close to the <script type="math/tex">\frac{\beta}{max(\beta)}</script> value suggested by the plot (see the vertical line labeled “3”)</p>
+
+<h3 id="cross-validation">Cross Validation</h3>
+<p>Now that we know how to go about fitting the lasso, let’s use  <em>cross validation</em> to select the best value for <script type="math/tex">\lambda</script>. We’ll use the <strong>cv.lars()</strong> function.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">cv.lars</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df</span><span class="p">[,</span><span class="m">-1</span><span class="p">],</span><span class="n">y</span><span class="o">=</span><span class="n">df</span><span class="p">[,</span><span class="m">1</span><span class="p">],</span><span class="n">intercept</span><span class="o">=</span><span class="n">F</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s2">"lasso"</span><span class="p">)</span>
+<span class="n">title</span><span class="p">(</span><span class="s2">"Lars CV"</span><span class="p">)</span>
+<span class="n">grid</span><span class="p">()</span></code></pre></figure>
+
+<p><img src="/assets/figures/LassoRidge/unnamed-chunk-9-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#The plot suggests that a L1 fraction = 0.5 should be good enough since the drop in CV MSE after that is not significant. To retrieve the coefficients at this L1 Fraction - 
+</span><span class="n">coef.lars</span><span class="p">(</span><span class="n">fit.lasso</span><span class="p">,</span><span class="n">s</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s2">"fraction"</span><span class="p">)</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">## EDHEC.LS.EQ    SP500.TR   US.10Y.TR    US.3m.TR 
+##    1.069299    0.000000    0.000000    0.000000</code></pre></figure>
+
+<p>Lets look at how well the model fits the data at this <script type="math/tex">\lambda</script> value.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">y_hat</span><span class="o">=</span><span class="n">predict.lars</span><span class="p">(</span><span class="n">object</span><span class="o">=</span><span class="n">fit.lasso</span><span class="p">,</span><span class="n">newx</span><span class="o">=</span><span class="n">df</span><span class="p">[,</span><span class="m">-1</span><span class="p">],</span><span class="n">s</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s2">"fraction"</span><span class="p">)</span>
+<span class="n">mat</span><span class="o">=</span><span class="n">cbind</span><span class="p">(</span><span class="n">df</span><span class="p">[,</span><span class="m">1</span><span class="p">],</span><span class="n">y_hat</span><span class="o">$</span><span class="n">fit</span><span class="p">)</span>
+
+<span class="n">matplot</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s1">'l'</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="s2">"black"</span><span class="p">,</span><span class="s2">"red"</span><span class="p">),</span><span class="n">main</span><span class="o">=</span><span class="s2">"In Sample Plot"</span><span class="p">,</span><span class="n">ylab</span><span class="o">=</span><span class="s2">"HAM2"</span><span class="p">)</span>
+<span class="n">legend</span><span class="p">(</span><span class="s2">"topright"</span><span class="p">,</span><span class="n">legend</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="s2">"Actual"</span><span class="p">,</span><span class="s2">"Predicted"</span><span class="p">),</span><span class="n">fill</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="s2">"black"</span><span class="p">,</span><span class="s2">"red"</span><span class="p">),</span><span class="n">bty</span><span class="o">=</span><span class="s1">'n'</span><span class="p">)</span>
+<span class="n">grid</span><span class="p">()</span></code></pre></figure>
+
+<p><img src="/assets/figures/LassoRidge/unnamed-chunk-10-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
+
+<p>Not too shabby :P</p>
+
+<p>Hopefully this was helpful in some way. Let me know what you think in the comments below !</p>
+
+<p>Thanks !</p>
+
+<p>Credits:</p>
+
+<ul>
+  <li><a href="http://yihui.name/knitr/">Knitr</a>: <em>Yihui Xie</em></li>
+  <li><a href="http://cran.r-project.org/web/packages/PerformanceAnalytics/index.html">Performance Analytics</a>: <em>Peter Carl and Brian Peterson</em></li>
+  <li><a href="http://cran.r-project.org/web/packages/lars/index.html">lars</a>  : <em>Brad Efron and Trevor Hastie</em></li>
+  <li><a href="http://cran.r-project.org/web/packages/MASS/index.html">MASS</a>  : <em>Brian Ripley</em></li>
+  <li><a href="http://cran.r-project.org/web/packages/bootStepAIC/bootStepAIC.pdf">bootStepAIC</a>  : <em>Dimitris Rizopoulos</em></li>
+</ul>
+
+<p>Some interesting links related to this post:</p>
+
+<ul>
+  <li>http://cbio.ensmp.fr/~jvert/svn/tutorials/practical/linearregression/linearregression.R</li>
+  <li>http://statweb.stanford.edu/~tibs/lasso/simple.html</li>
+  <li>http://www.stat.cmu.edu/~ryantibs/datamining/lectures/17-modr2.pdf</li>
+</ul>
+
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'royr2'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/12/29/HappyNewYear/">
+            Happy New Year using a Heatmap !?
+            <small>29 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2014/10/20/RChart/">
+            RCharts
+            <small>20 Oct 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2014/09/15/lm-vs-lmRob/">
+            lm() vs lmRob()
+            <small>15 Sep 2014</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+<!--Google Analytics--->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-57026003-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
