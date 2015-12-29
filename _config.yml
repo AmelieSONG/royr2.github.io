@@ -8,7 +8,7 @@ author:
 markdown:     kramdown
 highlighter:  pygments
 gems:         [jekyll-paginate]
-paginate:     4
+paginate:     5
 analytics :
   provider : google
   google :
