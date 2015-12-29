@@ -1,10 +1,10 @@
 title:        <a href = "/">R&sup2</a>
-tagline:      A personal Blog
-description:  R, Finance and statistics
+tagline:      ''
+description:  A personal blog about my fumblings with statistics, finance and anything  R
 url:          http://royr2.github.com
 author:
   name:       ''
-  email:      ''
+  email:      'riddhiman.roy@gmail.com'
 markdown:     kramdown
 highlighter:  pygments
 gems:         [jekyll-paginate]
