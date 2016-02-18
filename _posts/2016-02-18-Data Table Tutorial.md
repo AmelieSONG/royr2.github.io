@@ -12,12 +12,12 @@ I'll structure this tutorial using assignment style Questions and Answers.
 
 
 
-{% highlight r %}
+```r
 library(data.table)
 library(mlbench)
 library(ggplot2)
 library(magrittr)
-{% endhighlight %}
+```
 
 ### Basic structure
 Here's how I understand the basic setup for using an object of type `data.table`.
