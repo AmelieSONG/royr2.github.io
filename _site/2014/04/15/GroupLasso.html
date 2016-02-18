@@ -27,23 +27,20 @@
   <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 </head>
 
- 
+
    <body>
 
     <header class="masthead">
       <div class="masthead-inner">
         <h1><a href = "/">R&sup2</a></h1>
-        <p class="lead">A personal blog about my fumblings with statistics, finance and anything  R</p>
+        <p class="lead" style = "color:#cccccc">A personal blog about my fumblings with statistics, finance and anything  R</p>
 
-        <div class="colophon">
-          <ul class="colophon-links">
-            <li>
-              View project on <a href="https://github.com/royr2/royr2.github.io">GitHub</a>
-            </li>
-			<li><a href="http://www.linkedin.com/in/riddhimanr"><b>Linkedin</b></a><li>
-		  </ul>
-		  
-			Built using <a href = "http://jekyllrb.com"> jekyll </a> and <a href = "http://andhyde.com/"> hyde</a>
+        <div>
+          <hr style="height:1px;border:none;color:#ffffff;background-color:#ffffff;"/>
+          <a href="https://github.com/royr2/royr2.github.io" style="color:#ff00bf" target="_blank"><img style = "float:left; padding: 5px" src = "http://tinyurl.com/kpfzp6d" height = 50 width = 50></img></a>
+          <a href="http://www.linkedin.com/in/riddhimanr" style="color:#00a7ff"><img style = "padding: 5px" src = "http://tinyurl.com/nk3b8sc" height = 50 width = 50></img></a>
+
+          <p style = "color:#cccccc">Built using <a href = "http://jekyllrb.com"> jekyll </a> and <a href = "http://andhyde.com/"> hyde</a></p>
         </div>
 	  </div>
     </header>
@@ -74,25 +71,25 @@
 
 <h2 id="data-and-libraries">Data and Libraries</h2>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#install.packages(&quot;gglasso&quot;)</span>
-<span class="c1">#install.packages(&quot;zoo&quot;)</span>
-<span class="c1">#install.packages(&quot;RColorBrewer&quot;)</span>
-<span class="kn">library</span><span class="p">(</span>gglasso<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>RColorBrewer<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>zoo<span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#install.packages("gglasso")
+#install.packages("zoo")
+#install.packages("RColorBrewer")
+</span><span class="n">library</span><span class="p">(</span><span class="n">gglasso</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">RColorBrewer</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">zoo</span><span class="p">)</span>
 
-hist<span class="o">=</span>read.csv<span class="p">(</span><span class="s">&quot;historical data.csv&quot;</span><span class="p">)</span>
-proj<span class="o">=</span>read.csv<span class="p">(</span><span class="s">&quot;projections.csv&quot;</span><span class="p">)</span>
+<span class="n">hist</span><span class="o">=</span><span class="n">read.csv</span><span class="p">(</span><span class="s2">"historical data.csv"</span><span class="p">)</span>
+<span class="n">proj</span><span class="o">=</span><span class="n">read.csv</span><span class="p">(</span><span class="s2">"projections.csv"</span><span class="p">)</span>
 
-hist<span class="o">=</span><span class="kt">data.frame</span><span class="p">(</span>Date<span class="o">=</span><span class="kp">as.Date</span><span class="p">(</span>as.yearqtr<span class="p">(</span>hist<span class="p">[,</span><span class="m">1</span><span class="p">])),</span>hist<span class="p">[,</span><span class="m">-1</span><span class="p">])</span>
-proj<span class="o">=</span><span class="kt">data.frame</span><span class="p">(</span>Date<span class="o">=</span>proj<span class="p">[,</span><span class="m">1</span><span class="p">],</span>proj<span class="p">[,</span><span class="m">-1</span><span class="p">])</span></code></pre></figure>
+<span class="n">hist</span><span class="o">=</span><span class="n">data.frame</span><span class="p">(</span><span class="n">Date</span><span class="o">=</span><span class="n">as.Date</span><span class="p">(</span><span class="n">as.yearqtr</span><span class="p">(</span><span class="n">hist</span><span class="p">[,</span><span class="m">1</span><span class="p">])),</span><span class="n">hist</span><span class="p">[,</span><span class="m">-1</span><span class="p">])</span>
+<span class="n">proj</span><span class="o">=</span><span class="n">data.frame</span><span class="p">(</span><span class="n">Date</span><span class="o">=</span><span class="n">proj</span><span class="p">[,</span><span class="m">1</span><span class="p">],</span><span class="n">proj</span><span class="p">[,</span><span class="m">-1</span><span class="p">])</span></code></pre></figure>
 
 <p>Now let’s plot and have a look at the data.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Note that columns in a data frame can be referenced using the &#39;$&#39; operator</span>
-plot<span class="p">(</span>y<span class="o">=</span>hist<span class="o">$</span>Unemployment.Rate<span class="p">,</span>x<span class="o">=</span>hist<span class="o">$</span>Date<span class="p">,</span>main<span class="o">=</span><span class="s">&quot;Unemployment&quot;</span><span class="p">,</span>lwd<span class="o">=</span><span class="m">2</span><span class="p">,</span>col<span class="o">=</span><span class="s">&quot;slateblue&quot;</span><span class="p">,</span>type<span class="o">=</span><span class="s">&quot;l&quot;</span><span class="p">,</span>
-     xlab<span class="o">=</span><span class="s">&quot;Time&quot;</span><span class="p">,</span>ylab<span class="o">=</span><span class="s">&quot;Unemployment %&quot;</span><span class="p">)</span>
-grid<span class="p">()</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Note that columns in a data frame can be referenced using the '$' operator
+</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">hist</span><span class="o">$</span><span class="n">Unemployment.Rate</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="n">hist</span><span class="o">$</span><span class="n">Date</span><span class="p">,</span><span class="n">main</span><span class="o">=</span><span class="s2">"Unemployment"</span><span class="p">,</span><span class="n">lwd</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="s2">"slateblue"</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s2">"l"</span><span class="p">,</span>
+     <span class="n">xlab</span><span class="o">=</span><span class="s2">"Time"</span><span class="p">,</span><span class="n">ylab</span><span class="o">=</span><span class="s2">"Unemployment %"</span><span class="p">)</span>
+<span class="n">grid</span><span class="p">()</span></code></pre></figure>
 
 <p><img src="/assets/figures/GroupLasso/unnamed-chunk-2-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
@@ -111,73 +108,73 @@ The time series is not stationary and ideally we shouldn’t be using such a tim
   <li>Dow Jones and VIX as <em>Group4</em></li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="kp">names</span><span class="p">(</span>hist<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">names</span><span class="p">(</span><span class="n">hist</span><span class="p">)</span></code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-text" data-lang="text">##  [1] &quot;Date&quot;                                      
-##  [2] &quot;Real.GDP.Growth&quot;                           
-##  [3] &quot;Real.Disposable.Income.Growth&quot;             
-##  [4] &quot;Unemployment.Rate&quot;                         
-##  [5] &quot;CPI.Inflation.Rate&quot;                        
-##  [6] &quot;X3.Month.Treasury&quot;                         
-##  [7] &quot;X5.Year.Treasury&quot;                          
-##  [8] &quot;X10.Year.Treausry&quot;                         
-##  [9] &quot;BBB.Corporate.Yield&quot;                       
-## [10] &quot;Mortgage.Rate&quot;                             
-## [11] &quot;Prime.Rate&quot;                                
-## [12] &quot;House.Price.Index.pct.chg&quot;                 
-## [13] &quot;Commercial.Real.Estate.Price.Index.pct.chg&quot;
-## [14] &quot;Market.Volatility.Index..VIX..pct.chg&quot;     
-## [15] &quot;Dow.Jones.Total.Stock.Market.Index.pct.chg&quot;</code></pre></figure>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">##  [1] "Date"                                      
+##  [2] "Real.GDP.Growth"                           
+##  [3] "Real.Disposable.Income.Growth"             
+##  [4] "Unemployment.Rate"                         
+##  [5] "CPI.Inflation.Rate"                        
+##  [6] "X3.Month.Treasury"                         
+##  [7] "X5.Year.Treasury"                          
+##  [8] "X10.Year.Treausry"                         
+##  [9] "BBB.Corporate.Yield"                       
+## [10] "Mortgage.Rate"                             
+## [11] "Prime.Rate"                                
+## [12] "House.Price.Index.pct.chg"                 
+## [13] "Commercial.Real.Estate.Price.Index.pct.chg"
+## [14] "Market.Volatility.Index..VIX..pct.chg"     
+## [15] "Dow.Jones.Total.Stock.Market.Index.pct.chg"</code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Remove Dates and Unemployment from the model matrix </span>
-X<span class="o">=</span>hist<span class="p">[,</span><span class="kt">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">-4</span><span class="p">)]</span>
-X<span class="o">=</span><span class="kp">as.matrix</span><span class="p">(</span>X<span class="p">)</span>
-Y<span class="o">=</span>hist<span class="p">[,</span><span class="m">4</span><span class="p">]</span>
-grp<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">4</span><span class="p">,</span><span class="m">4</span><span class="p">)</span>
-fit<span class="o">=</span>gglasso<span class="p">(</span>x<span class="o">=</span>X<span class="p">,</span>y<span class="o">=</span>Y<span class="p">,</span>group<span class="o">=</span>grp<span class="p">,</span>loss<span class="o">=</span><span class="s">&#39;ls&#39;</span><span class="p">)</span>
-coef.mat<span class="o">=</span>fit<span class="o">$</span><span class="kp">beta</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Remove Dates and Unemployment from the model matrix 
+</span><span class="n">X</span><span class="o">=</span><span class="n">hist</span><span class="p">[,</span><span class="n">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">-4</span><span class="p">)]</span>
+<span class="n">X</span><span class="o">=</span><span class="n">as.matrix</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">Y</span><span class="o">=</span><span class="n">hist</span><span class="p">[,</span><span class="m">4</span><span class="p">]</span>
+<span class="n">grp</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">4</span><span class="p">,</span><span class="m">4</span><span class="p">)</span>
+<span class="n">fit</span><span class="o">=</span><span class="n">gglasso</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span><span class="n">group</span><span class="o">=</span><span class="n">grp</span><span class="p">,</span><span class="n">loss</span><span class="o">=</span><span class="s1">'ls'</span><span class="p">)</span>
+<span class="n">coef.mat</span><span class="o">=</span><span class="n">fit</span><span class="o">$</span><span class="n">beta</span>
 
-<span class="c1">#Group1 enters the equation</span>
-g1<span class="o">=</span><span class="kp">max</span><span class="p">(</span><span class="kp">which</span><span class="p">(</span>coef.mat<span class="p">[</span><span class="m">1</span><span class="p">,]</span><span class="o">==</span><span class="m">0</span><span class="p">))</span>
+<span class="c1">#Group1 enters the equation
+</span><span class="n">g1</span><span class="o">=</span><span class="n">max</span><span class="p">(</span><span class="n">which</span><span class="p">(</span><span class="n">coef.mat</span><span class="p">[</span><span class="m">1</span><span class="p">,]</span><span class="o">==</span><span class="m">0</span><span class="p">))</span>
 
-<span class="c1">#Group2 enters the equation</span>
-g2<span class="o">=</span><span class="kp">max</span><span class="p">(</span><span class="kp">which</span><span class="p">(</span>coef.mat<span class="p">[</span><span class="m">4</span><span class="p">,]</span><span class="o">==</span><span class="m">0</span><span class="p">))</span>
+<span class="c1">#Group2 enters the equation
+</span><span class="n">g2</span><span class="o">=</span><span class="n">max</span><span class="p">(</span><span class="n">which</span><span class="p">(</span><span class="n">coef.mat</span><span class="p">[</span><span class="m">4</span><span class="p">,]</span><span class="o">==</span><span class="m">0</span><span class="p">))</span>
 
-<span class="c1">#Group3 enters the equation</span>
-g3<span class="o">=</span><span class="kp">max</span><span class="p">(</span><span class="kp">which</span><span class="p">(</span>coef.mat<span class="p">[</span><span class="m">8</span><span class="p">,]</span><span class="o">==</span><span class="m">0</span><span class="p">))</span>
+<span class="c1">#Group3 enters the equation
+</span><span class="n">g3</span><span class="o">=</span><span class="n">max</span><span class="p">(</span><span class="n">which</span><span class="p">(</span><span class="n">coef.mat</span><span class="p">[</span><span class="m">8</span><span class="p">,]</span><span class="o">==</span><span class="m">0</span><span class="p">))</span>
 
-<span class="c1">#Group4 enters the equation</span>
-g4<span class="o">=</span><span class="kp">max</span><span class="p">(</span><span class="kp">which</span><span class="p">(</span>coef.mat<span class="p">[</span><span class="m">12</span><span class="p">,]</span><span class="o">==</span><span class="m">0</span><span class="p">))</span>
+<span class="c1">#Group4 enters the equation
+</span><span class="n">g4</span><span class="o">=</span><span class="n">max</span><span class="p">(</span><span class="n">which</span><span class="p">(</span><span class="n">coef.mat</span><span class="p">[</span><span class="m">12</span><span class="p">,]</span><span class="o">==</span><span class="m">0</span><span class="p">))</span>
 
-<span class="c1">#Coefficient Plot. Let&#39;s also use some nice colors</span>
+<span class="c1">#Coefficient Plot. Let's also use some nice colors
+</span>
+<span class="n">cols</span><span class="o">=</span><span class="n">brewer.pal</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">"Set1"</span><span class="p">)</span>
 
-cols<span class="o">=</span>brewer.pal<span class="p">(</span><span class="m">5</span><span class="p">,</span>name<span class="o">=</span><span class="s">&quot;Set1&quot;</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">fit</span><span class="o">$</span><span class="n">b0</span><span class="p">,</span><span class="n">main</span><span class="o">=</span><span class="s2">"Coefficient vs Step"</span><span class="p">,</span>
+     <span class="n">ylab</span><span class="o">=</span><span class="s2">"Intercept"</span><span class="p">,</span><span class="n">xlab</span><span class="o">=</span><span class="s2">"Step (decreasing Lambda =&gt;)"</span><span class="p">,</span>
+     <span class="n">col</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="m">1</span><span class="p">],</span>
+     <span class="n">xlim</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">100</span><span class="p">),</span>
+     <span class="n">ylim</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="n">max</span><span class="p">(</span><span class="n">fit</span><span class="o">$</span><span class="n">b0</span><span class="p">)),</span>
+     <span class="n">type</span><span class="o">=</span><span class="s2">"l"</span><span class="p">,</span><span class="n">lwd</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
+<span class="n">grid</span><span class="p">()</span>
+<span class="n">par</span><span class="p">(</span><span class="n">new</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
 
-plot<span class="p">(</span>fit<span class="o">$</span>b0<span class="p">,</span>main<span class="o">=</span><span class="s">&quot;Coefficient vs Step&quot;</span><span class="p">,</span>
-     ylab<span class="o">=</span><span class="s">&quot;Intercept&quot;</span><span class="p">,</span>xlab<span class="o">=</span><span class="s">&quot;Step (decreasing Lambda =&gt;)&quot;</span><span class="p">,</span>
-     col<span class="o">=</span>cols<span class="p">[</span><span class="m">1</span><span class="p">],</span>
-     xlim<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">100</span><span class="p">),</span>
-     ylim<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="kp">max</span><span class="p">(</span>fit<span class="o">$</span>b0<span class="p">)),</span>
-     type<span class="o">=</span><span class="s">&quot;l&quot;</span><span class="p">,</span>lwd<span class="o">=</span><span class="m">4</span><span class="p">)</span>
-grid<span class="p">()</span>
-par<span class="p">(</span>new<span class="o">=</span><span class="bp">T</span><span class="p">)</span>
+<span class="n">x</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="n">g1</span><span class="p">,</span><span class="n">g2</span><span class="p">,</span><span class="n">g3</span><span class="p">,</span><span class="n">g4</span><span class="p">)</span>
+<span class="n">y</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="n">fit</span><span class="o">$</span><span class="n">b0</span><span class="p">[</span><span class="n">g1</span><span class="p">],</span><span class="n">fit</span><span class="o">$</span><span class="n">b0</span><span class="p">[</span><span class="n">g2</span><span class="p">],</span><span class="n">fit</span><span class="o">$</span><span class="n">b0</span><span class="p">[</span><span class="n">g3</span><span class="p">],</span><span class="n">fit</span><span class="o">$</span><span class="n">b0</span><span class="p">[</span><span class="n">g4</span><span class="p">])</span>
 
-x<span class="o">=</span><span class="kt">c</span><span class="p">(</span>g1<span class="p">,</span>g2<span class="p">,</span>g3<span class="p">,</span>g4<span class="p">)</span>
-y<span class="o">=</span><span class="kt">c</span><span class="p">(</span>fit<span class="o">$</span>b0<span class="p">[</span>g1<span class="p">],</span>fit<span class="o">$</span>b0<span class="p">[</span>g2<span class="p">],</span>fit<span class="o">$</span>b0<span class="p">[</span>g3<span class="p">],</span>fit<span class="o">$</span>b0<span class="p">[</span>g4<span class="p">])</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">pch</span><span class="o">=</span><span class="m">13</span><span class="p">,</span><span class="n">lwd</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="n">cex</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="m">-1</span><span class="p">],</span>
+     <span class="n">xlim</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">100</span><span class="p">),</span><span class="n">ylim</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="n">max</span><span class="p">(</span><span class="n">fit</span><span class="o">$</span><span class="n">b0</span><span class="p">)),</span>
+     <span class="n">xaxt</span><span class="o">=</span><span class="s1">'n'</span><span class="p">,</span><span class="n">yaxt</span><span class="o">=</span><span class="s1">'n'</span><span class="p">,</span><span class="n">xlab</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span><span class="n">ylab</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
 
-plot<span class="p">(</span>x<span class="o">=</span>x<span class="p">,</span>y<span class="o">=</span>y<span class="p">,</span>pch<span class="o">=</span><span class="m">13</span><span class="p">,</span>lwd<span class="o">=</span><span class="m">2</span><span class="p">,</span>cex<span class="o">=</span><span class="m">2</span><span class="p">,</span>col<span class="o">=</span>cols<span class="p">[</span><span class="m">-1</span><span class="p">],</span>
-     xlim<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">100</span><span class="p">),</span>ylim<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="kp">max</span><span class="p">(</span>fit<span class="o">$</span>b0<span class="p">)),</span>
-     xaxt<span class="o">=</span><span class="s">&#39;n&#39;</span><span class="p">,</span>yaxt<span class="o">=</span><span class="s">&#39;n&#39;</span><span class="p">,</span>xlab<span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span>ylab<span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">)</span>
-
-lmda<span class="o">=</span><span class="kp">round</span><span class="p">(</span>fit<span class="o">$</span>lambda<span class="p">[</span><span class="kt">c</span><span class="p">(</span>g1<span class="p">,</span>g2<span class="p">,</span>g3<span class="p">,</span>g4<span class="p">)],</span><span class="m">2</span><span class="p">)</span>
-text<span class="p">(</span>x<span class="o">=</span>x<span class="m">-0.5</span><span class="p">,</span>y<span class="o">=</span>y<span class="m">+0.1</span><span class="p">,</span>labels<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;Group1&quot;</span><span class="p">,</span><span class="s">&quot;Group2&quot;</span><span class="p">,</span><span class="s">&quot;Group3&quot;</span><span class="p">,</span><span class="s">&quot;Group4&quot;</span><span class="p">),</span>pos<span class="o">=</span><span class="m">3</span><span class="p">,</span>cex<span class="o">=</span><span class="m">0.9</span><span class="p">)</span>
-text<span class="p">(</span>x<span class="o">=</span>x<span class="m">-0.5</span><span class="p">,</span>y<span class="o">=</span>y<span class="m">-0.1</span><span class="p">,</span>labels<span class="o">=</span><span class="kp">paste</span><span class="p">(</span><span class="s">&quot;Lambda\n=&quot;</span><span class="p">,</span>lmda<span class="p">),</span>pos<span class="o">=</span><span class="m">1</span><span class="p">,</span>cex<span class="o">=</span><span class="m">0.8</span><span class="p">)</span></code></pre></figure>
+<span class="n">lmda</span><span class="o">=</span><span class="n">round</span><span class="p">(</span><span class="n">fit</span><span class="o">$</span><span class="n">lambda</span><span class="p">[</span><span class="n">c</span><span class="p">(</span><span class="n">g1</span><span class="p">,</span><span class="n">g2</span><span class="p">,</span><span class="n">g3</span><span class="p">,</span><span class="n">g4</span><span class="p">)],</span><span class="m">2</span><span class="p">)</span>
+<span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="m">-0.5</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="m">+0.1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="s2">"Group1"</span><span class="p">,</span><span class="s2">"Group2"</span><span class="p">,</span><span class="s2">"Group3"</span><span class="p">,</span><span class="s2">"Group4"</span><span class="p">),</span><span class="n">pos</span><span class="o">=</span><span class="m">3</span><span class="p">,</span><span class="n">cex</span><span class="o">=</span><span class="m">0.9</span><span class="p">)</span>
+<span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="m">-0.5</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="m">-0.1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="n">paste</span><span class="p">(</span><span class="s2">"Lambda\n="</span><span class="p">,</span><span class="n">lmda</span><span class="p">),</span><span class="n">pos</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">cex</span><span class="o">=</span><span class="m">0.8</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/GroupLasso/unnamed-chunk-3-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
 <p>The intercept is not penalized and hence is always present in the regression equation. But as the plot above shows, each group enters the regression equation at a particular value of lambda. For example:</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">coef.mat<span class="p">[,</span><span class="kt">c</span><span class="p">(</span><span class="m">12</span><span class="p">,</span><span class="m">13</span><span class="p">,</span><span class="m">14</span><span class="p">)]</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">coef.mat</span><span class="p">[,</span><span class="n">c</span><span class="p">(</span><span class="m">12</span><span class="p">,</span><span class="m">13</span><span class="p">,</span><span class="m">14</span><span class="p">)]</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">##                                                     s11          s12
 ## Real.GDP.Growth                             0.000000000  0.000000000
@@ -217,15 +214,15 @@ text<span class="p">(</span>x<span class="o">=</span>x<span class="m">-0.5</span
 <h2 id="cross-validation-and-inferences">Cross Validation and Inferences</h2>
 <p>Thankfully the <strong>gglasso</strong> package has a built in function that provides cross validation capabilities.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Cross Validation</span>
-fit.cv<span class="o">=</span>cv.gglasso<span class="p">(</span>x<span class="o">=</span>X<span class="p">,</span>y<span class="o">=</span>Y<span class="p">,</span>group<span class="o">=</span>grp<span class="p">,</span>nfolds<span class="o">=</span><span class="m">10</span><span class="p">)</span>
-plot<span class="p">(</span>fit.cv<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Cross Validation
+</span><span class="n">fit.cv</span><span class="o">=</span><span class="n">cv.gglasso</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span><span class="n">group</span><span class="o">=</span><span class="n">grp</span><span class="p">,</span><span class="n">nfolds</span><span class="o">=</span><span class="m">10</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">fit.cv</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/GroupLasso/unnamed-chunk-5-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Pick the best Lambda</span>
-lmbda<span class="o">=</span>fit.cv<span class="o">$</span>lambda.1se
-<span class="p">(</span>coefs<span class="o">=</span>coef.gglasso<span class="p">(</span>object<span class="o">=</span>fit<span class="p">,</span>s<span class="o">=</span>lmbda<span class="p">))</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Pick the best Lambda
+</span><span class="n">lmbda</span><span class="o">=</span><span class="n">fit.cv</span><span class="o">$</span><span class="n">lambda.1se</span>
+<span class="p">(</span><span class="n">coefs</span><span class="o">=</span><span class="n">coef.gglasso</span><span class="p">(</span><span class="n">object</span><span class="o">=</span><span class="n">fit</span><span class="p">,</span><span class="n">s</span><span class="o">=</span><span class="n">lmbda</span><span class="p">))</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">##                                                       1
 ## (Intercept)                                15.603969368
@@ -243,27 +240,27 @@ lmbda<span class="o">=</span>fit.cv<span class="o">$</span>lambda.1se
 ## Market.Volatility.Index..VIX..pct.chg       0.007157314
 ## Dow.Jones.Total.Stock.Market.Index.pct.chg  0.016550570</code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#At best lambda get coefficients and fitted values</span>
-plt<span class="o">=</span><span class="kp">cbind</span><span class="p">(</span>Y<span class="p">,</span>predict.gglasso<span class="p">(</span>object<span class="o">=</span>fit<span class="p">,</span>newx<span class="o">=</span>X<span class="p">,</span>s<span class="o">=</span>lmbda<span class="p">,</span>type<span class="o">=</span><span class="s">&#39;link&#39;</span><span class="p">))</span>
-matplot<span class="p">(</span>plt<span class="p">,</span>main<span class="o">=</span><span class="s">&quot;Predicted vs Actual&quot;</span><span class="p">,</span>type<span class="o">=</span><span class="s">&#39;l&#39;</span><span class="p">,</span>lwd<span class="o">=</span><span class="m">2</span><span class="p">,</span>col<span class="o">=</span>cols<span class="p">[</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)],</span>
-        ylab<span class="o">=</span><span class="s">&quot;Unemplyoment %&quot;</span><span class="p">,</span>
-        xlab<span class="o">=</span><span class="s">&quot;Time&quot;</span><span class="p">)</span>
-grid<span class="p">()</span>
-legend<span class="p">(</span>x<span class="o">=</span><span class="m">40</span><span class="p">,</span>y<span class="o">=</span><span class="m">5</span><span class="p">,</span>legend<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;Actual&quot;</span><span class="p">,</span><span class="s">&quot;Predicted&quot;</span><span class="p">),</span>fill<span class="o">=</span><span class="kt">c</span><span class="p">(</span>cols<span class="p">[</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)]),</span>bty<span class="o">=</span><span class="s">&quot;n&quot;</span><span class="p">,</span>cex<span class="o">=</span><span class="m">0.7</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#At best lambda get coefficients and fitted values
+</span><span class="n">plt</span><span class="o">=</span><span class="n">cbind</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">predict.gglasso</span><span class="p">(</span><span class="n">object</span><span class="o">=</span><span class="n">fit</span><span class="p">,</span><span class="n">newx</span><span class="o">=</span><span class="n">X</span><span class="p">,</span><span class="n">s</span><span class="o">=</span><span class="n">lmbda</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s1">'link'</span><span class="p">))</span>
+<span class="n">matplot</span><span class="p">(</span><span class="n">plt</span><span class="p">,</span><span class="n">main</span><span class="o">=</span><span class="s2">"Predicted vs Actual"</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s1">'l'</span><span class="p">,</span><span class="n">lwd</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="n">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)],</span>
+        <span class="n">ylab</span><span class="o">=</span><span class="s2">"Unemplyoment %"</span><span class="p">,</span>
+        <span class="n">xlab</span><span class="o">=</span><span class="s2">"Time"</span><span class="p">)</span>
+<span class="n">grid</span><span class="p">()</span>
+<span class="n">legend</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="m">40</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="m">5</span><span class="p">,</span><span class="n">legend</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="s2">"Actual"</span><span class="p">,</span><span class="s2">"Predicted"</span><span class="p">),</span><span class="n">fill</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)]),</span><span class="n">bty</span><span class="o">=</span><span class="s2">"n"</span><span class="p">,</span><span class="n">cex</span><span class="o">=</span><span class="m">0.7</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/GroupLasso/unnamed-chunk-5-2.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
 <p>Let’s now try to generate some forward looking projections and compare them against what the Fed has provided us.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Get forward looking projections</span>
-X<span class="o">=</span><span class="kp">as.matrix</span><span class="p">(</span>proj<span class="p">[,</span><span class="o">-</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">4</span><span class="p">)])</span>
-plt<span class="o">=</span><span class="kp">cbind</span><span class="p">(</span>proj<span class="o">$</span>Unemployment.Rate<span class="p">,</span>predict.gglasso<span class="p">(</span>object<span class="o">=</span>fit<span class="p">,</span>newx<span class="o">=</span>X<span class="p">,</span>s<span class="o">=</span>lmbda<span class="p">,</span>type<span class="o">=</span><span class="s">&#39;link&#39;</span><span class="p">))</span>
-matplot<span class="p">(</span>plt<span class="p">,</span>main<span class="o">=</span><span class="s">&quot;Predicted vs Fed Projections&quot;</span><span class="p">,</span>type<span class="o">=</span><span class="s">&#39;l&#39;</span><span class="p">,</span>lwd<span class="o">=</span><span class="m">2</span><span class="p">,</span>col<span class="o">=</span>cols<span class="p">[</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)],</span>
-        ylab<span class="o">=</span><span class="s">&quot;Unemplyoment %&quot;</span><span class="p">,</span>
-        xlab<span class="o">=</span><span class="s">&quot;Time&quot;</span><span class="p">)</span>
-grid<span class="p">()</span>
-legend<span class="p">(</span>x<span class="o">=</span><span class="m">10</span><span class="p">,</span>y<span class="o">=</span><span class="m">8</span><span class="p">,</span>legend<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;Fed Projection&quot;</span><span class="p">,</span><span class="s">&quot; Our Prediction&quot;</span><span class="p">),</span>
-       fill<span class="o">=</span><span class="kt">c</span><span class="p">(</span>cols<span class="p">[</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)]),</span>bty<span class="o">=</span><span class="s">&quot;n&quot;</span><span class="p">,</span>cex<span class="o">=</span><span class="m">0.7</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Get forward looking projections
+</span><span class="n">X</span><span class="o">=</span><span class="n">as.matrix</span><span class="p">(</span><span class="n">proj</span><span class="p">[,</span><span class="o">-</span><span class="n">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">4</span><span class="p">)])</span>
+<span class="n">plt</span><span class="o">=</span><span class="n">cbind</span><span class="p">(</span><span class="n">proj</span><span class="o">$</span><span class="n">Unemployment.Rate</span><span class="p">,</span><span class="n">predict.gglasso</span><span class="p">(</span><span class="n">object</span><span class="o">=</span><span class="n">fit</span><span class="p">,</span><span class="n">newx</span><span class="o">=</span><span class="n">X</span><span class="p">,</span><span class="n">s</span><span class="o">=</span><span class="n">lmbda</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s1">'link'</span><span class="p">))</span>
+<span class="n">matplot</span><span class="p">(</span><span class="n">plt</span><span class="p">,</span><span class="n">main</span><span class="o">=</span><span class="s2">"Predicted vs Fed Projections"</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s1">'l'</span><span class="p">,</span><span class="n">lwd</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="n">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)],</span>
+        <span class="n">ylab</span><span class="o">=</span><span class="s2">"Unemplyoment %"</span><span class="p">,</span>
+        <span class="n">xlab</span><span class="o">=</span><span class="s2">"Time"</span><span class="p">)</span>
+<span class="n">grid</span><span class="p">()</span>
+<span class="n">legend</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="m">8</span><span class="p">,</span><span class="n">legend</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="s2">"Fed Projection"</span><span class="p">,</span><span class="s2">" Our Prediction"</span><span class="p">),</span>
+       <span class="n">fill</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)]),</span><span class="n">bty</span><span class="o">=</span><span class="s2">"n"</span><span class="p">,</span><span class="n">cex</span><span class="o">=</span><span class="m">0.7</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/GroupLasso/unnamed-chunk-6-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
@@ -313,6 +310,15 @@ legend<span class="p">(</span>x<span class="o">=</span><span class="m">10</span>
     
       <li>
         <h3>
+          <a href="/2016/02/18/Data-Table-Tutorial.html">
+            A data.table Tutorial
+            <small>18 Feb 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <a href="/2015/12/29/HappyNewYear.html">
             Happy New Year using a Heatmap !?
             <small>29 Dec 2015</small>
@@ -325,15 +331,6 @@ legend<span class="p">(</span>x<span class="o">=</span><span class="m">10</span>
           <a href="/2014/10/20/RChart.html">
             RCharts
             <small>20 Oct 2014</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/2014/09/15/lm-vs-lmRob.html">
-            lm() vs lmRob()
-            <small>15 Sep 2014</small>
           </a>
         </h3>
       </li>

@@ -27,23 +27,20 @@
   <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 </head>
 
- 
+
    <body>
 
     <header class="masthead">
       <div class="masthead-inner">
         <h1><a href = "/">R&sup2</a></h1>
-        <p class="lead">A personal blog about my fumblings with statistics, finance and anything  R</p>
+        <p class="lead" style = "color:#cccccc">A personal blog about my fumblings with statistics, finance and anything  R</p>
 
-        <div class="colophon">
-          <ul class="colophon-links">
-            <li>
-              View project on <a href="https://github.com/royr2/royr2.github.io">GitHub</a>
-            </li>
-			<li><a href="http://www.linkedin.com/in/riddhimanr"><b>Linkedin</b></a><li>
-		  </ul>
-		  
-			Built using <a href = "http://jekyllrb.com"> jekyll </a> and <a href = "http://andhyde.com/"> hyde</a>
+        <div>
+          <hr style="height:1px;border:none;color:#ffffff;background-color:#ffffff;"/>
+          <a href="https://github.com/royr2/royr2.github.io" style="color:#ff00bf" target="_blank"><img style = "float:left; padding: 5px" src = "http://tinyurl.com/kpfzp6d" height = 50 width = 50></img></a>
+          <a href="http://www.linkedin.com/in/riddhimanr" style="color:#00a7ff"><img style = "padding: 5px" src = "http://tinyurl.com/nk3b8sc" height = 50 width = 50></img></a>
+
+          <p style = "color:#cccccc">Built using <a href = "http://jekyllrb.com"> jekyll </a> and <a href = "http://andhyde.com/"> hyde</a></p>
         </div>
 	  </div>
     </header>
@@ -58,37 +55,37 @@
 
 <p>Let’s get some data to work with. I am going to use the <a href="http://cran.r-project.org/web/packages/quantmod/index.html">quantmod</a> package . Let’s just use a simple example.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#install.packages(&#39;quantmod&#39;)</span>
-<span class="c1">#install.packages(&#39;dynlm&#39;)</span>
-<span class="c1">#install.packages(&#39;zoo&#39;)</span>
-<span class="kp">options</span><span class="p">(</span>warn <span class="o">=</span> <span class="m">-1</span><span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>quantmod<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>zoo<span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#install.packages('quantmod')
+#install.packages('dynlm')
+#install.packages('zoo')
+</span><span class="n">options</span><span class="p">(</span><span class="n">warn</span> <span class="o">=</span> <span class="m">-1</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">quantmod</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">zoo</span><span class="p">)</span>
 
-gdp <span class="o">=</span> getSymbols<span class="p">(</span><span class="s">&#39;GDP&#39;</span><span class="p">,</span> src <span class="o">=</span> <span class="s">&#39;FRED&#39;</span><span class="p">,</span> auto.assign <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
-ind <span class="o">=</span> getSymbols<span class="p">(</span><span class="s">&#39;INDPRO&#39;</span><span class="p">,</span> src <span class="o">=</span> <span class="s">&#39;FRED&#39;</span><span class="p">,</span> auto.assign <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+<span class="n">gdp</span> <span class="o">=</span> <span class="n">getSymbols</span><span class="p">(</span><span class="s1">'GDP'</span><span class="p">,</span> <span class="n">src</span> <span class="o">=</span> <span class="s1">'FRED'</span><span class="p">,</span> <span class="n">auto.assign</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">)</span>
+<span class="n">ind</span> <span class="o">=</span> <span class="n">getSymbols</span><span class="p">(</span><span class="s1">'INDPRO'</span><span class="p">,</span> <span class="n">src</span> <span class="o">=</span> <span class="s1">'FRED'</span><span class="p">,</span> <span class="n">auto.assign</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">)</span>
 
-<span class="c1"># Convert to timeseries data</span>
-gdp <span class="o">=</span> zoo<span class="p">(</span>x <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>gdp<span class="p">),</span> order.by <span class="o">=</span> as.yearmon<span class="p">(</span>index<span class="p">(</span>gdp<span class="p">)))</span>
-ind <span class="o">=</span> zoo<span class="p">(</span>x <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>ind<span class="p">),</span> order.by <span class="o">=</span> as.yearmon<span class="p">(</span>index<span class="p">(</span>ind<span class="p">)))</span>
+<span class="c1"># Convert to timeseries data
+</span><span class="n">gdp</span> <span class="o">=</span> <span class="n">zoo</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">as.numeric</span><span class="p">(</span><span class="n">gdp</span><span class="p">),</span> <span class="n">order.by</span> <span class="o">=</span> <span class="n">as.yearmon</span><span class="p">(</span><span class="n">index</span><span class="p">(</span><span class="n">gdp</span><span class="p">)))</span>
+<span class="n">ind</span> <span class="o">=</span> <span class="n">zoo</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">as.numeric</span><span class="p">(</span><span class="n">ind</span><span class="p">),</span> <span class="n">order.by</span> <span class="o">=</span> <span class="n">as.yearmon</span><span class="p">(</span><span class="n">index</span><span class="p">(</span><span class="n">ind</span><span class="p">)))</span>
 
-<span class="c1"># Convert to growth percentages</span>
-gdp <span class="o">=</span> <span class="kp">log</span><span class="p">(</span>gdp<span class="o">/</span>lag<span class="p">(</span>gdp<span class="p">,</span><span class="m">-1</span><span class="p">))</span>
-ind <span class="o">=</span> <span class="kp">log</span><span class="p">(</span>ind<span class="o">/</span>lag<span class="p">(</span>ind<span class="p">,</span><span class="m">-1</span><span class="p">))</span></code></pre></figure>
+<span class="c1"># Convert to growth percentages
+</span><span class="n">gdp</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="n">gdp</span><span class="o">/</span><span class="n">lag</span><span class="p">(</span><span class="n">gdp</span><span class="p">,</span><span class="m">-1</span><span class="p">))</span>
+<span class="n">ind</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="n">ind</span><span class="o">/</span><span class="n">lag</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span><span class="m">-1</span><span class="p">))</span></code></pre></figure>
 
-<p>I’ll be using the <code>dynlm()</code> function instead of <code>lm()</code> since it can handle timeseries data directly.</p>
+<p>I’ll be using the <code class="highlighter-rouge">dynlm()</code> function instead of <code class="highlighter-rouge">lm()</code> since it can handle timeseries data directly.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#install.packages(&#39;dynlm&#39;)</span>
-<span class="kn">library</span><span class="p">(</span>dynlm<span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#install.packages('dynlm')
+</span><span class="n">library</span><span class="p">(</span><span class="n">dynlm</span><span class="p">)</span>
 
-fit <span class="o">=</span> dynlm<span class="p">(</span>gdp <span class="o">~</span> ind<span class="p">)</span></code></pre></figure>
+<span class="n">fit</span> <span class="o">=</span> <span class="n">dynlm</span><span class="p">(</span><span class="n">gdp</span> <span class="o">~</span> <span class="n">ind</span><span class="p">)</span></code></pre></figure>
 
-<p>Where there is <code>lm()</code> there is <code>summary()</code></p>
+<p>Where there is <code class="highlighter-rouge">lm()</code> there is <code class="highlighter-rouge">summary()</code></p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="kp">summary</span><span class="p">(</span>fit<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">summary</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## 
-## Time series regression with &quot;zoo&quot; data:
+## Time series regression with "zoo" data:
 ## Start = Apr 1947, End = Jul 2014
 ## 
 ## Call:
@@ -103,7 +100,7 @@ fit <span class="o">=</span> dynlm<span class="p">(</span>gdp <span class="o">~<
 ## (Intercept) 0.0146347  0.0005864   24.96   &lt;2e-16 ***
 ## ind         0.6362679  0.0622009   10.23   &lt;2e-16 ***
 ## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Residual standard error: 0.009436 on 268 degrees of freedom
 ## Multiple R-squared:  0.2808,	Adjusted R-squared:  0.2781 
@@ -112,44 +109,44 @@ fit <span class="o">=</span> dynlm<span class="p">(</span>gdp <span class="o">~<
 <h3 id="bootstrapping---ols">Bootstrapping - OLS</h3>
 <p>Let’s bootstrap the OLS estimate and see what the bootstrapped standard error is.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Note how dynlm() handles data internally using data frames</span>
-mat <span class="o">=</span> <span class="kt">data.frame</span><span class="p">(</span>gdp <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>fit<span class="o">$</span>model<span class="p">[,</span><span class="m">1</span><span class="p">]),</span>
-                 ind <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>fit<span class="o">$</span>model<span class="p">[,</span><span class="m">2</span><span class="p">]))</span>
-<span class="kp">class</span><span class="p">(</span>mat<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Note how dynlm() handles data internally using data frames
+</span><span class="n">mat</span> <span class="o">=</span> <span class="n">data.frame</span><span class="p">(</span><span class="n">gdp</span> <span class="o">=</span> <span class="n">as.numeric</span><span class="p">(</span><span class="n">fit</span><span class="o">$</span><span class="n">model</span><span class="p">[,</span><span class="m">1</span><span class="p">]),</span>
+                 <span class="n">ind</span> <span class="o">=</span> <span class="n">as.numeric</span><span class="p">(</span><span class="n">fit</span><span class="o">$</span><span class="n">model</span><span class="p">[,</span><span class="m">2</span><span class="p">]))</span>
+<span class="n">class</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span></code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-text" data-lang="text">## [1] &quot;data.frame&quot;</code></pre></figure>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">## [1] "data.frame"</code></pre></figure>
 
-<p>I’ll use the <code>boot()</code> function to do this. Let’s also create a function which can fit a lm model and return the coefficient on the <strong>Industrial Production Index</strong>.</p>
+<p>I’ll use the <code class="highlighter-rouge">boot()</code> function to do this. Let’s also create a function which can fit a lm model and return the coefficient on the <strong>Industrial Production Index</strong>.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#install.packeges(&#39;boot&#39;)</span>
-<span class="kn">library</span><span class="p">(</span>boot<span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#install.packeges('boot')
+</span><span class="n">library</span><span class="p">(</span><span class="n">boot</span><span class="p">)</span>
 
-lmFUNC <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">,</span>indices<span class="p">){</span>
-  fit <span class="o">=</span> lm<span class="p">(</span>gdp<span class="o">~</span>ind<span class="p">,</span> data <span class="o">=</span> x<span class="p">[</span>indices<span class="p">,])</span>
-  <span class="kr">return</span><span class="p">(</span>coef<span class="p">(</span>fit<span class="p">)[</span><span class="m">2</span><span class="p">])</span>
+<span class="n">lmFUNC</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">indices</span><span class="p">){</span>
+  <span class="n">fit</span> <span class="o">=</span> <span class="n">lm</span><span class="p">(</span><span class="n">gdp</span><span class="o">~</span><span class="n">ind</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">indices</span><span class="p">,])</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">coef</span><span class="p">(</span><span class="n">fit</span><span class="p">)[</span><span class="m">2</span><span class="p">])</span>
 <span class="p">}</span>
 
-lm.boot <span class="o">=</span> boot<span class="p">(</span>data <span class="o">=</span> mat<span class="p">,</span> R <span class="o">=</span> <span class="m">1000</span><span class="p">,</span> statistic <span class="o">=</span> lmFUNC<span class="p">)</span>
-<span class="kp">summary</span><span class="p">(</span>lm.boot<span class="p">)</span></code></pre></figure>
+<span class="n">lm.boot</span> <span class="o">=</span> <span class="n">boot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">mat</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="m">1000</span><span class="p">,</span> <span class="n">statistic</span> <span class="o">=</span> <span class="n">lmFUNC</span><span class="p">)</span>
+<span class="n">summary</span><span class="p">(</span><span class="n">lm.boot</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">##      R original  bootBias   bootSE bootMed
 ## 1 1000  0.63627 0.0029981 0.074579  0.6366</code></pre></figure>
 
-<p>The coefficient on the industrial production index has a rather high standard error but a much smaller bias value. The bias and standard error can be very easily calculated as shown below. Also, we can plot a histogram and a q-q plot of the bootstrapped estimates using the <code>plot()</code> function. Note that <strong>t</strong> here refers to the value of the coefficient on <strong>Industrial Production Index</strong>.</p>
+<p>The coefficient on the industrial production index has a rather high standard error but a much smaller bias value. The bias and standard error can be very easily calculated as shown below. Also, we can plot a histogram and a q-q plot of the bootstrapped estimates using the <code class="highlighter-rouge">plot()</code> function. Note that <strong>t</strong> here refers to the value of the coefficient on <strong>Industrial Production Index</strong>.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1"># Bias</span>
-<span class="p">(</span>bias <span class="o">=</span> <span class="kp">mean</span><span class="p">(</span>lm.boot<span class="o">$</span><span class="kp">t</span><span class="p">)</span> <span class="o">-</span> lm.boot<span class="o">$</span>t0<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1"># Bias
+</span><span class="p">(</span><span class="n">bias</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">lm.boot</span><span class="o">$</span><span class="n">t</span><span class="p">)</span> <span class="o">-</span> <span class="n">lm.boot</span><span class="o">$</span><span class="n">t0</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">##         ind 
 ## 0.002998114</code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1"># Standard Error</span>
-<span class="p">(</span>se <span class="o">=</span> sd<span class="p">(</span>lm.boot<span class="o">$</span><span class="kp">t</span><span class="p">))</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1"># Standard Error
+</span><span class="p">(</span><span class="n">se</span> <span class="o">=</span> <span class="n">sd</span><span class="p">(</span><span class="n">lm.boot</span><span class="o">$</span><span class="n">t</span><span class="p">))</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## [1] 0.0745794</code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1"># Plot</span>
-plot<span class="p">(</span>lm.boot<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1"># Plot
+</span><span class="n">plot</span><span class="p">(</span><span class="n">lm.boot</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/lm vs lmRob/unnamed-chunk-6-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
@@ -157,69 +154,69 @@ plot<span class="p">(</span>lm.boot<span class="p">)</span></code></pre></figure
 
 <p>It is well known that OLS estimates are sensitive to small changes in data and or outliers. We can show this emperically. Let’s artificially introduce some outliers into our data. Let’s first identify the data point with the highest cook’s distance. Looks like it’s the <strong>14<sup>th</sup></strong> datapoint in our GDP dataset. Let’s try to distort this specific datapoint.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">par<span class="p">(</span>mfrow <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">))</span>
-plot<span class="p">(</span>fit<span class="p">,</span> which <span class="o">=</span> <span class="m">5</span><span class="p">)</span>
-plot<span class="p">(</span>fit<span class="p">,</span> which <span class="o">=</span> <span class="m">4</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">par</span><span class="p">(</span><span class="n">mfrow</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">))</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">which</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">which</span> <span class="o">=</span> <span class="m">4</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/lm vs lmRob/unnamed-chunk-7-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">par<span class="p">(</span>mfrow <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">par</span><span class="p">(</span><span class="n">mfrow</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span>
 
-gdp.mod <span class="o">=</span> gdp
+<span class="n">gdp.mod</span> <span class="o">=</span> <span class="n">gdp</span>
 
-<span class="c1"># Change the 14th datapoint</span>
-gdp.mod<span class="p">[</span><span class="m">14</span><span class="p">]</span> <span class="o">=</span> gdp<span class="p">[</span><span class="m">14</span><span class="p">]</span> <span class="o">+</span> <span class="m">1.1</span><span class="o">*</span>gdp<span class="p">[</span><span class="m">14</span><span class="p">]</span>
-matplot<span class="p">(</span><span class="kp">cbind</span><span class="p">(</span>gdp<span class="p">,</span>gdp.mod<span class="p">),</span>type <span class="o">=</span> <span class="s">&#39;l&#39;</span><span class="p">,</span> xlab <span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> main <span class="o">=</span> <span class="s">&quot;Original GDP vs Modified GDP&quot;</span><span class="p">)</span></code></pre></figure>
+<span class="c1"># Change the 14th datapoint
+</span><span class="n">gdp.mod</span><span class="p">[</span><span class="m">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdp</span><span class="p">[</span><span class="m">14</span><span class="p">]</span> <span class="o">+</span> <span class="m">1.1</span><span class="o">*</span><span class="n">gdp</span><span class="p">[</span><span class="m">14</span><span class="p">]</span>
+<span class="n">matplot</span><span class="p">(</span><span class="n">cbind</span><span class="p">(</span><span class="n">gdp</span><span class="p">,</span><span class="n">gdp.mod</span><span class="p">),</span><span class="n">type</span> <span class="o">=</span> <span class="s1">'l'</span><span class="p">,</span> <span class="n">xlab</span> <span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="n">main</span> <span class="o">=</span> <span class="s2">"Original GDP vs Modified GDP"</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/lm vs lmRob/unnamed-chunk-7-2.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"> <span class="c1"># Refit</span>
-fit.mod <span class="o">=</span> dynlm<span class="p">(</span>gdp.mod <span class="o">~</span> ind<span class="p">)</span>
-coef<span class="p">(</span>fit.mod<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"> <span class="c1"># Refit
+</span><span class="n">fit.mod</span> <span class="o">=</span> <span class="n">dynlm</span><span class="p">(</span><span class="n">gdp.mod</span> <span class="o">~</span> <span class="n">ind</span><span class="p">)</span>
+<span class="n">coef</span><span class="p">(</span><span class="n">fit.mod</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## (Intercept)         ind 
 ##  0.01471512  0.72117785</code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">coef<span class="p">(</span>fit<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">coef</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## (Intercept)         ind 
 ##  0.01463469  0.63626785</code></pre></figure>
 
 <p>The coefficient on the <strong>Industrial Production Index</strong> has changed by <strong>13.3450079</strong> %. We can bootstrap the estimate again to check how the standard error of the bootstrapped estimate changes.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">mat <span class="o">=</span> <span class="kt">data.frame</span><span class="p">(</span>gdp <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>fit.mod<span class="o">$</span>model<span class="p">[,</span><span class="m">1</span><span class="p">]),</span>
-                 ind <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>fit.mod<span class="o">$</span>model<span class="p">[,</span><span class="m">2</span><span class="p">]))</span>
-lm.boot.mod <span class="o">=</span> boot<span class="p">(</span>data <span class="o">=</span> mat<span class="p">,</span> R <span class="o">=</span> <span class="m">1000</span><span class="p">,</span> statistic <span class="o">=</span> lmFUNC<span class="p">)</span>
-<span class="kp">rbind</span><span class="p">(</span><span class="kp">summary</span><span class="p">(</span>lm.boot<span class="p">),</span>
-      <span class="kp">summary</span><span class="p">(</span>lm.boot.mod<span class="p">))</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">mat</span> <span class="o">=</span> <span class="n">data.frame</span><span class="p">(</span><span class="n">gdp</span> <span class="o">=</span> <span class="n">as.numeric</span><span class="p">(</span><span class="n">fit.mod</span><span class="o">$</span><span class="n">model</span><span class="p">[,</span><span class="m">1</span><span class="p">]),</span>
+                 <span class="n">ind</span> <span class="o">=</span> <span class="n">as.numeric</span><span class="p">(</span><span class="n">fit.mod</span><span class="o">$</span><span class="n">model</span><span class="p">[,</span><span class="m">2</span><span class="p">]))</span>
+<span class="n">lm.boot.mod</span> <span class="o">=</span> <span class="n">boot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">mat</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="m">1000</span><span class="p">,</span> <span class="n">statistic</span> <span class="o">=</span> <span class="n">lmFUNC</span><span class="p">)</span>
+<span class="n">rbind</span><span class="p">(</span><span class="n">summary</span><span class="p">(</span><span class="n">lm.boot</span><span class="p">),</span>
+      <span class="n">summary</span><span class="p">(</span><span class="n">lm.boot.mod</span><span class="p">))</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">##      R original   bootBias   bootSE bootMed
 ## 1 1000  0.63627  0.0029981 0.074579 0.63660
 ## 2 1000  0.72118 -0.0024191 0.129563 0.70099</code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1"># Plot</span>
-plot<span class="p">(</span>lm.boot.mod<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1"># Plot
+</span><span class="n">plot</span><span class="p">(</span><span class="n">lm.boot.mod</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/lm vs lmRob/unnamed-chunk-8-1.png" alt="center" /></p>
 
-<p>Notice that the plots seem to suggest that the bootstrapped estimates are skewed (unlike in the first case). Let’s go trough the same exercise using <code>lmRob()</code></p>
+<p>Notice that the plots seem to suggest that the bootstrapped estimates are skewed (unlike in the first case). Let’s go trough the same exercise using <code class="highlighter-rouge">lmRob()</code></p>
 
 <h3 id="lmrob">lmRob()</h3>
 <p>Let’s first fit the data and see what the coefficients look like and then we can bootstrap the estimates.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#install.packages(&#39;robust&#39;)</span>
-<span class="c1">#install.packages(&#39;moments&#39;)</span>
-<span class="kn">library</span><span class="p">(</span>robust<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>moments<span class="p">)</span>
-mat <span class="o">=</span> na.omit<span class="p">(</span><span class="kp">merge</span><span class="p">(</span>gdp<span class="p">,</span> ind<span class="p">))</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#install.packages('robust')
+#install.packages('moments')
+</span><span class="n">library</span><span class="p">(</span><span class="n">robust</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">moments</span><span class="p">)</span>
+<span class="n">mat</span> <span class="o">=</span> <span class="n">na.omit</span><span class="p">(</span><span class="n">merge</span><span class="p">(</span><span class="n">gdp</span><span class="p">,</span> <span class="n">ind</span><span class="p">))</span>
 
-<span class="c1">#Convert to data frame</span>
-mat <span class="o">=</span> <span class="kt">data.frame</span><span class="p">(</span>gdp <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>mat<span class="p">[,</span><span class="m">1</span><span class="p">]),</span>
-                 ind <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>mat<span class="p">[,</span><span class="m">2</span><span class="p">]))</span>
+<span class="c1">#Convert to data frame
+</span><span class="n">mat</span> <span class="o">=</span> <span class="n">data.frame</span><span class="p">(</span><span class="n">gdp</span> <span class="o">=</span> <span class="n">as.numeric</span><span class="p">(</span><span class="n">mat</span><span class="p">[,</span><span class="m">1</span><span class="p">]),</span>
+                 <span class="n">ind</span> <span class="o">=</span> <span class="n">as.numeric</span><span class="p">(</span><span class="n">mat</span><span class="p">[,</span><span class="m">2</span><span class="p">]))</span>
 
-fit <span class="o">=</span> lmRob<span class="p">(</span>formula <span class="o">=</span> gdp <span class="o">~</span> ind<span class="p">,</span> data <span class="o">=</span> mat<span class="p">)</span>
+<span class="n">fit</span> <span class="o">=</span> <span class="n">lmRob</span><span class="p">(</span><span class="n">formula</span> <span class="o">=</span> <span class="n">gdp</span> <span class="o">~</span> <span class="n">ind</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">mat</span><span class="p">)</span>
 
-<span class="kp">summary</span><span class="p">(</span>fit<span class="p">)</span></code></pre></figure>
+<span class="n">summary</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## 
 ## Call:
@@ -234,7 +231,7 @@ fit <span class="o">=</span> lmRob<span class="p">(</span>formula <span class="o
 ## (Intercept) 0.0147333  0.0005438  27.094   &lt;2e-16 ***
 ## ind         0.5251668  0.0591619   8.877   &lt;2e-16 ***
 ## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Residual standard error: 0.007539 on 268 degrees of freedom
 ## Multiple R-Squared: 0.1866 
@@ -246,31 +243,31 @@ fit <span class="o">=</span> lmRob<span class="p">(</span>formula <span class="o
 
 <p>Note the lower R-Squared value.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">lmRobFUNC <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">,</span>indices<span class="p">){</span>
-  fit <span class="o">=</span> lmRob<span class="p">(</span>gdp<span class="o">~</span>ind<span class="p">,</span> data <span class="o">=</span> x<span class="p">[</span>indices<span class="p">,])</span>
-  <span class="kr">return</span><span class="p">(</span>coef<span class="p">(</span>fit<span class="p">)[</span><span class="m">2</span><span class="p">])</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">lmRobFUNC</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">indices</span><span class="p">){</span>
+  <span class="n">fit</span> <span class="o">=</span> <span class="n">lmRob</span><span class="p">(</span><span class="n">gdp</span><span class="o">~</span><span class="n">ind</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">indices</span><span class="p">,])</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">coef</span><span class="p">(</span><span class="n">fit</span><span class="p">)[</span><span class="m">2</span><span class="p">])</span>
 <span class="p">}</span> 
 
-lm.boot.rob <span class="o">=</span> boot<span class="p">(</span>data <span class="o">=</span> mat<span class="p">,</span> R <span class="o">=</span> <span class="m">1000</span><span class="p">,</span> statistic <span class="o">=</span> lmRobFUNC<span class="p">)</span>
-<span class="kp">summary</span><span class="p">(</span>lm.boot.rob<span class="p">)</span></code></pre></figure>
+<span class="n">lm.boot.rob</span> <span class="o">=</span> <span class="n">boot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">mat</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="m">1000</span><span class="p">,</span> <span class="n">statistic</span> <span class="o">=</span> <span class="n">lmRobFUNC</span><span class="p">)</span>
+<span class="n">summary</span><span class="p">(</span><span class="n">lm.boot.rob</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">##      R original  bootBias   bootSE bootMed
 ## 1 1000  0.52517 0.0012635 0.069818 0.52466</code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">plot<span class="p">(</span>lm.boot.rob<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">plot</span><span class="p">(</span><span class="n">lm.boot.rob</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/lm vs lmRob/unnamed-chunk-10-1.png" alt="center" /></p>
 
 <p>Now let’s introduce the outlier as we did earlier and see what happens.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">mat <span class="o">=</span> na.omit<span class="p">(</span><span class="kp">merge</span><span class="p">(</span>gdp.mod<span class="p">,</span> ind<span class="p">))</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">mat</span> <span class="o">=</span> <span class="n">na.omit</span><span class="p">(</span><span class="n">merge</span><span class="p">(</span><span class="n">gdp.mod</span><span class="p">,</span> <span class="n">ind</span><span class="p">))</span>
 
-<span class="c1">#Convert to data frame</span>
-mat <span class="o">=</span> <span class="kt">data.frame</span><span class="p">(</span>gdp.mod <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>mat<span class="p">[,</span><span class="m">1</span><span class="p">]),</span>
-                 ind <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>mat<span class="p">[,</span><span class="m">2</span><span class="p">]))</span>
+<span class="c1">#Convert to data frame
+</span><span class="n">mat</span> <span class="o">=</span> <span class="n">data.frame</span><span class="p">(</span><span class="n">gdp.mod</span> <span class="o">=</span> <span class="n">as.numeric</span><span class="p">(</span><span class="n">mat</span><span class="p">[,</span><span class="m">1</span><span class="p">]),</span>
+                 <span class="n">ind</span> <span class="o">=</span> <span class="n">as.numeric</span><span class="p">(</span><span class="n">mat</span><span class="p">[,</span><span class="m">2</span><span class="p">]))</span>
 
-fit <span class="o">=</span> lmRob<span class="p">(</span>formula <span class="o">=</span> gdp <span class="o">~</span> ind<span class="p">,</span> data <span class="o">=</span> mat<span class="p">)</span>
-<span class="kp">summary</span><span class="p">(</span>fit<span class="p">)</span></code></pre></figure>
+<span class="n">fit</span> <span class="o">=</span> <span class="n">lmRob</span><span class="p">(</span><span class="n">formula</span> <span class="o">=</span> <span class="n">gdp</span> <span class="o">~</span> <span class="n">ind</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">mat</span><span class="p">)</span>
+<span class="n">summary</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## 
 ## Call:
@@ -285,7 +282,7 @@ fit <span class="o">=</span> lmRob<span class="p">(</span>formula <span class="o
 ## (Intercept) 0.0147333  0.0005438  27.094   &lt;2e-16 ***
 ## ind         0.5251668  0.0591619   8.877   &lt;2e-16 ***
 ## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Residual standard error: 0.007539 on 268 degrees of freedom
 ## Multiple R-Squared: 0.1866 
@@ -295,26 +292,26 @@ fit <span class="o">=</span> lmRob<span class="p">(</span>formula <span class="o
 ## M-estimate      10.10 6.404e-03
 ## LS-estimate     33.96 4.233e-08</code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">lm.boot.rob.mod <span class="o">=</span> boot<span class="p">(</span>data <span class="o">=</span> mat<span class="p">,</span> R <span class="o">=</span> <span class="m">1000</span><span class="p">,</span> statistic <span class="o">=</span> lmRobFUNC<span class="p">)</span>
-<span class="kp">summary</span><span class="p">(</span>lm.boot.rob.mod<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">lm.boot.rob.mod</span> <span class="o">=</span> <span class="n">boot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">mat</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="m">1000</span><span class="p">,</span> <span class="n">statistic</span> <span class="o">=</span> <span class="n">lmRobFUNC</span><span class="p">)</span>
+<span class="n">summary</span><span class="p">(</span><span class="n">lm.boot.rob.mod</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">##      R original bootBias   bootSE     bootMed
 ## 1 1000  0.52517 -0.52466 0.063767 -8.6064e-05</code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">plot<span class="p">(</span>lm.boot.rob.mod<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">plot</span><span class="p">(</span><span class="n">lm.boot.rob.mod</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/lm vs lmRob/unnamed-chunk-11-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
 <p>Note how the coefficient on Industrial Production Index is the same when compared to the case when there was no outlier. The bootstrapped estimates are fairly normally distributed. But note that the boot strapped estimates have a <strong>higher bias</strong> but a <strong>lower standard error</strong>. In the wake of outliers robust estimation might make more sense. This effect is much better seen in the following plot of the residuals from the two (OLS vs Robust) fits.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">fit.compare <span class="o">=</span> fit.models<span class="p">(</span><span class="kt">list</span><span class="p">(</span>Robust <span class="o">=</span> <span class="s">&quot;lmRob&quot;</span><span class="p">,</span> 
-                <span class="s">&quot;LS&quot;</span> <span class="o">=</span> <span class="s">&quot;lm&quot;</span><span class="p">),</span> formula <span class="o">=</span> gdp <span class="o">~</span> ind<span class="p">,</span> data <span class="o">=</span> mat<span class="p">)</span>
-par<span class="p">(</span>mfrow <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">))</span>
-plot<span class="p">(</span>fit.compare<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">fit.compare</span> <span class="o">=</span> <span class="n">fit.models</span><span class="p">(</span><span class="n">list</span><span class="p">(</span><span class="n">Robust</span> <span class="o">=</span> <span class="s2">"lmRob"</span><span class="p">,</span> 
+                <span class="s2">"LS"</span> <span class="o">=</span> <span class="s2">"lm"</span><span class="p">),</span> <span class="n">formula</span> <span class="o">=</span> <span class="n">gdp</span> <span class="o">~</span> <span class="n">ind</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">mat</span><span class="p">)</span>
+<span class="n">par</span><span class="p">(</span><span class="n">mfrow</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">))</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">fit.compare</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/lm vs lmRob/unnamed-chunk-12-1.png" title="center" alt="center" style="display: block; margin: auto;" /><img src="/assets/figures/lm vs lmRob/unnamed-chunk-12-2.png" title="center" alt="center" style="display: block; margin: auto;" /><img src="/assets/figures/lm vs lmRob/unnamed-chunk-12-3.png" title="center" alt="center" style="display: block; margin: auto;" /><img src="/assets/figures/lm vs lmRob/unnamed-chunk-12-4.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">par<span class="p">(</span>mfrow <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">par</span><span class="p">(</span><span class="n">mfrow</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span></code></pre></figure>
 
 <p>Thoughts? Feel free to comment below !  Thanks !</p>
 
@@ -341,6 +338,15 @@ plot<span class="p">(</span>fit.compare<span class="p">)</span></code></pre></fi
     
       <li>
         <h3>
+          <a href="/2016/02/18/Data-Table-Tutorial.html">
+            A data.table Tutorial
+            <small>18 Feb 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <a href="/2015/12/29/HappyNewYear.html">
             Happy New Year using a Heatmap !?
             <small>29 Dec 2015</small>
@@ -353,15 +359,6 @@ plot<span class="p">(</span>fit.compare<span class="p">)</span></code></pre></fi
           <a href="/2014/10/20/RChart.html">
             RCharts
             <small>20 Oct 2014</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/2014/06/10/Clustering.html">
-            Clustering
-            <small>10 Jun 2014</small>
           </a>
         </h3>
       </li>

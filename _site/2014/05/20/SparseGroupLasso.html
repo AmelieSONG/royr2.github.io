@@ -27,23 +27,20 @@
   <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 </head>
 
- 
+
    <body>
 
     <header class="masthead">
       <div class="masthead-inner">
         <h1><a href = "/">R&sup2</a></h1>
-        <p class="lead">A personal blog about my fumblings with statistics, finance and anything  R</p>
+        <p class="lead" style = "color:#cccccc">A personal blog about my fumblings with statistics, finance and anything  R</p>
 
-        <div class="colophon">
-          <ul class="colophon-links">
-            <li>
-              View project on <a href="https://github.com/royr2/royr2.github.io">GitHub</a>
-            </li>
-			<li><a href="http://www.linkedin.com/in/riddhimanr"><b>Linkedin</b></a><li>
-		  </ul>
-		  
-			Built using <a href = "http://jekyllrb.com"> jekyll </a> and <a href = "http://andhyde.com/"> hyde</a>
+        <div>
+          <hr style="height:1px;border:none;color:#ffffff;background-color:#ffffff;"/>
+          <a href="https://github.com/royr2/royr2.github.io" style="color:#ff00bf" target="_blank"><img style = "float:left; padding: 5px" src = "http://tinyurl.com/kpfzp6d" height = 50 width = 50></img></a>
+          <a href="http://www.linkedin.com/in/riddhimanr" style="color:#00a7ff"><img style = "padding: 5px" src = "http://tinyurl.com/nk3b8sc" height = 50 width = 50></img></a>
+
+          <p style = "color:#cccccc">Built using <a href = "http://jekyllrb.com"> jekyll </a> and <a href = "http://andhyde.com/"> hyde</a></p>
         </div>
 	  </div>
     </header>
@@ -70,48 +67,48 @@
 
 <h3 id="r-code">R-Code</h3>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1"># install.packages(&quot;SGL&quot;)</span>
-<span class="c1"># install.packages(&quot;zoo&quot;)  </span>
-<span class="c1"># install.packages(&quot;RColorBrewer&quot;)  </span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1"># install.packages("SGL")
+# install.packages("zoo")  
+# install.packages("RColorBrewer")  
+</span>
+<span class="n">library</span><span class="p">(</span><span class="n">zoo</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">SGL</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">RColorBrewer</span><span class="p">)</span>
 
-<span class="kn">library</span><span class="p">(</span>zoo<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>SGL<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>RColorBrewer<span class="p">)</span>
+<span class="n">hist</span><span class="o">=</span><span class="n">read.csv</span><span class="p">(</span><span class="s2">"historical data.csv"</span><span class="p">)</span>
+<span class="n">proj</span><span class="o">=</span><span class="n">read.csv</span><span class="p">(</span><span class="s2">"projections.csv"</span><span class="p">)</span>
 
-hist<span class="o">=</span>read.csv<span class="p">(</span><span class="s">&quot;historical data.csv&quot;</span><span class="p">)</span>
-proj<span class="o">=</span>read.csv<span class="p">(</span><span class="s">&quot;projections.csv&quot;</span><span class="p">)</span>
+<span class="n">hist</span><span class="o">=</span><span class="n">data.frame</span><span class="p">(</span><span class="n">Date</span><span class="o">=</span><span class="n">as.Date</span><span class="p">(</span><span class="n">as.yearqtr</span><span class="p">(</span><span class="n">hist</span><span class="p">[,</span><span class="m">1</span><span class="p">])),</span><span class="n">hist</span><span class="p">[,</span><span class="m">-1</span><span class="p">])</span>
+<span class="n">proj</span><span class="o">=</span><span class="n">data.frame</span><span class="p">(</span><span class="n">Date</span><span class="o">=</span><span class="n">proj</span><span class="p">[,</span><span class="m">1</span><span class="p">],</span><span class="n">proj</span><span class="p">[,</span><span class="m">-1</span><span class="p">])</span>
 
-hist<span class="o">=</span><span class="kt">data.frame</span><span class="p">(</span>Date<span class="o">=</span><span class="kp">as.Date</span><span class="p">(</span>as.yearqtr<span class="p">(</span>hist<span class="p">[,</span><span class="m">1</span><span class="p">])),</span>hist<span class="p">[,</span><span class="m">-1</span><span class="p">])</span>
-proj<span class="o">=</span><span class="kt">data.frame</span><span class="p">(</span>Date<span class="o">=</span>proj<span class="p">[,</span><span class="m">1</span><span class="p">],</span>proj<span class="p">[,</span><span class="m">-1</span><span class="p">])</span>
+<span class="n">X</span><span class="o">=</span><span class="n">hist</span><span class="p">[,</span><span class="n">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">-4</span><span class="p">)]</span>
+<span class="n">X</span><span class="o">=</span><span class="n">as.matrix</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">Y</span><span class="o">=</span><span class="n">hist</span><span class="p">[,</span><span class="m">4</span><span class="p">]</span>
+<span class="n">grp</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">4</span><span class="p">,</span><span class="m">4</span><span class="p">)</span>
 
-X<span class="o">=</span>hist<span class="p">[,</span><span class="kt">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">-4</span><span class="p">)]</span>
-X<span class="o">=</span><span class="kp">as.matrix</span><span class="p">(</span>X<span class="p">)</span>
-Y<span class="o">=</span>hist<span class="p">[,</span><span class="m">4</span><span class="p">]</span>
-grp<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">4</span><span class="p">,</span><span class="m">4</span><span class="p">)</span>
+<span class="n">data</span><span class="o">=</span><span class="n">list</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">Y</span><span class="p">)</span>
 
-data<span class="o">=</span><span class="kt">list</span><span class="p">(</span>x<span class="o">=</span>X<span class="p">,</span> y<span class="o">=</span>Y<span class="p">)</span>
-
-cvFit<span class="o">=</span>cvSGL<span class="p">(</span>data<span class="o">=</span>data<span class="p">,</span>index<span class="o">=</span>grp<span class="p">,</span>type<span class="o">=</span><span class="s">&quot;linear&quot;</span><span class="p">)</span>
-plot<span class="p">(</span>cvFit<span class="p">)</span></code></pre></figure>
+<span class="n">cvFit</span><span class="o">=</span><span class="n">cvSGL</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="n">grp</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s2">"linear"</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">cvFit</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/SparseGroupLasso/unnamed-chunk-1-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
 <p>Based on this plot I’ll pick a log(lambda) value of -3.4 (ish).</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">beta<span class="o">=</span>cvFit<span class="o">$</span>fit<span class="o">$</span><span class="kp">beta</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">beta</span><span class="o">=</span><span class="n">cvFit</span><span class="o">$</span><span class="n">fit</span><span class="o">$</span><span class="n">beta</span>
 
-<span class="c1">#Print the lambda values to see which lambda is close to log(lambda)~ -3.4</span>
-cvFit<span class="o">$</span>lambdas</code></pre></figure>
+<span class="c1">#Print the lambda values to see which lambda is close to log(lambda)~ -3.4
+</span><span class="n">cvFit</span><span class="o">$</span><span class="n">lambdas</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">##  [1] 0.20666290 0.17651729 0.15076898 0.12877653 0.10999209 0.09394771
 ##  [7] 0.08024370 0.06853867 0.05854104 0.05000174 0.04270806 0.03647830
 ## [13] 0.03115727 0.02661240 0.02273049 0.01941483 0.01658282 0.01416391
 ## [19] 0.01209784 0.01033314</code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">idx<span class="o">=</span><span class="m">13</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">idx</span><span class="o">=</span><span class="m">13</span>
 
-<span class="c1">#The model corrosponding to this lambda value is:</span>
-<span class="kt">data.frame</span><span class="p">(</span>Variables<span class="o">=</span><span class="kp">colnames</span><span class="p">(</span>X<span class="p">),</span>Coefficients<span class="o">=</span><span class="kp">beta</span><span class="p">[,</span>idx<span class="p">])</span></code></pre></figure>
+<span class="c1">#The model corrosponding to this lambda value is:
+</span><span class="n">data.frame</span><span class="p">(</span><span class="n">Variables</span><span class="o">=</span><span class="n">colnames</span><span class="p">(</span><span class="n">X</span><span class="p">),</span><span class="n">Coefficients</span><span class="o">=</span><span class="n">beta</span><span class="p">[,</span><span class="n">idx</span><span class="p">])</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">##                                     Variables Coefficients
 ## 1                             Real.GDP.Growth     0.000000
@@ -139,29 +136,29 @@ cvFit<span class="o">$</span>lambdas</code></pre></figure>
 
 <p>Now to extract the model and do projections at that value of lambda.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Fit SGL model first</span>
-mdl<span class="o">=</span>SGL<span class="p">(</span>data<span class="o">=</span>data<span class="p">,</span>index<span class="o">=</span>grp<span class="p">,</span>type<span class="o">=</span><span class="s">&quot;linear&quot;</span><span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Fit SGL model first
+</span><span class="n">mdl</span><span class="o">=</span><span class="n">SGL</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="n">grp</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s2">"linear"</span><span class="p">)</span>
 
-<span class="c1">#Matrix of future covariate values</span>
-X.new<span class="o">=</span><span class="kp">as.matrix</span><span class="p">(</span>proj<span class="p">[,</span><span class="o">-</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">4</span><span class="p">)])</span>
+<span class="c1">#Matrix of future covariate values
+</span><span class="n">X.new</span><span class="o">=</span><span class="n">as.matrix</span><span class="p">(</span><span class="n">proj</span><span class="p">[,</span><span class="o">-</span><span class="n">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">4</span><span class="p">)])</span>
 
-<span class="c1">#Get projections</span>
-projections<span class="o">=</span>predictSGL<span class="p">(</span>x<span class="o">=</span>mdl<span class="p">,</span>newX<span class="o">=</span>X.new<span class="p">,</span>lam<span class="o">=</span>idx<span class="p">)</span>
-plt<span class="o">=</span><span class="kp">cbind</span><span class="p">(</span>proj<span class="o">$</span>Unemployment.Rate<span class="p">,</span>projections<span class="p">)</span>
+<span class="c1">#Get projections
+</span><span class="n">projections</span><span class="o">=</span><span class="n">predictSGL</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span><span class="n">newX</span><span class="o">=</span><span class="n">X.new</span><span class="p">,</span><span class="n">lam</span><span class="o">=</span><span class="n">idx</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">=</span><span class="n">cbind</span><span class="p">(</span><span class="n">proj</span><span class="o">$</span><span class="n">Unemployment.Rate</span><span class="p">,</span><span class="n">projections</span><span class="p">)</span>
 
-<span class="c1">#Plot</span>
-cols <span class="o">=</span> brewer.pal<span class="p">(</span><span class="m">5</span><span class="p">,</span> name <span class="o">=</span> <span class="s">&quot;Set1&quot;</span><span class="p">)</span>
-matplot<span class="p">(</span>plt<span class="p">,</span> main <span class="o">=</span> <span class="s">&quot;Predicted vs Fed Projections&quot;</span><span class="p">,</span> type <span class="o">=</span> <span class="s">&quot;l&quot;</span><span class="p">,</span> lwd <span class="o">=</span> <span class="m">2</span><span class="p">,</span> 
-        col <span class="o">=</span> cols<span class="p">[</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)],</span> ylab <span class="o">=</span> <span class="s">&quot;Unemplyoment %&quot;</span><span class="p">,</span> xlab <span class="o">=</span> <span class="s">&quot;Time&quot;</span><span class="p">);</span>grid<span class="p">()</span>
-legend<span class="p">(</span>x <span class="o">=</span> <span class="m">10</span><span class="p">,</span> y <span class="o">=</span> <span class="m">8</span><span class="p">,</span> legend <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Fed Projection&quot;</span><span class="p">,</span> <span class="s">&quot; Our Prediction&quot;</span><span class="p">),</span> 
-       fill <span class="o">=</span> <span class="kt">c</span><span class="p">(</span>cols<span class="p">[</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)]),</span> bty <span class="o">=</span> <span class="s">&quot;n&quot;</span><span class="p">,</span> cex <span class="o">=</span> <span class="m">0.7</span><span class="p">)</span></code></pre></figure>
+<span class="c1">#Plot
+</span><span class="n">cols</span> <span class="o">=</span> <span class="n">brewer.pal</span><span class="p">(</span><span class="m">5</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">"Set1"</span><span class="p">)</span>
+<span class="n">matplot</span><span class="p">(</span><span class="n">plt</span><span class="p">,</span> <span class="n">main</span> <span class="o">=</span> <span class="s2">"Predicted vs Fed Projections"</span><span class="p">,</span> <span class="n">type</span> <span class="o">=</span> <span class="s2">"l"</span><span class="p">,</span> <span class="n">lwd</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> 
+        <span class="n">col</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="n">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)],</span> <span class="n">ylab</span> <span class="o">=</span> <span class="s2">"Unemplyoment %"</span><span class="p">,</span> <span class="n">xlab</span> <span class="o">=</span> <span class="s2">"Time"</span><span class="p">);</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">legend</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="m">10</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="m">8</span><span class="p">,</span> <span class="n">legend</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="s2">"Fed Projection"</span><span class="p">,</span> <span class="s2">" Our Prediction"</span><span class="p">),</span> 
+       <span class="n">fill</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)]),</span> <span class="n">bty</span> <span class="o">=</span> <span class="s2">"n"</span><span class="p">,</span> <span class="n">cex</span> <span class="o">=</span> <span class="m">0.7</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/SparseGroupLasso/unnamed-chunk-3-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
 <p>Note that we ran all of the above computations are run at an <script type="math/tex">\alpha</script> value of 0.95 (default). 
 This can be easily changed as below:</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">Fit<span class="o">=</span>SGL<span class="p">(</span>data<span class="o">=</span>data<span class="p">,</span>index<span class="o">=</span>grp<span class="p">,</span>type<span class="o">=</span><span class="s">&quot;linear&quot;</span><span class="p">,</span>alpha<span class="o">=</span><span class="m">0.25</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">Fit</span><span class="o">=</span><span class="n">SGL</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="n">grp</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s2">"linear"</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.25</span><span class="p">)</span></code></pre></figure>
 
 
   <div id="disqus_thread"></div>
@@ -186,6 +183,15 @@ This can be easily changed as below:</p>
     
       <li>
         <h3>
+          <a href="/2016/02/18/Data-Table-Tutorial.html">
+            A data.table Tutorial
+            <small>18 Feb 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <a href="/2015/12/29/HappyNewYear.html">
             Happy New Year using a Heatmap !?
             <small>29 Dec 2015</small>
@@ -198,15 +204,6 @@ This can be easily changed as below:</p>
           <a href="/2014/10/20/RChart.html">
             RCharts
             <small>20 Oct 2014</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/2014/09/15/lm-vs-lmRob.html">
-            lm() vs lmRob()
-            <small>15 Sep 2014</small>
           </a>
         </h3>
       </li>

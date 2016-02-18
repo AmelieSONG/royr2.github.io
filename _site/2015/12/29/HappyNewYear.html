@@ -27,23 +27,20 @@
   <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 </head>
 
- 
+
    <body>
 
     <header class="masthead">
       <div class="masthead-inner">
         <h1><a href = "/">R&sup2</a></h1>
-        <p class="lead">A personal blog about my fumblings with statistics, finance and anything  R</p>
+        <p class="lead" style = "color:#cccccc">A personal blog about my fumblings with statistics, finance and anything  R</p>
 
-        <div class="colophon">
-          <ul class="colophon-links">
-            <li>
-              View project on <a href="https://github.com/royr2/royr2.github.io">GitHub</a>
-            </li>
-			<li><a href="http://www.linkedin.com/in/riddhimanr"><b>Linkedin</b></a><li>
-		  </ul>
-		  
-			Built using <a href = "http://jekyllrb.com"> jekyll </a> and <a href = "http://andhyde.com/"> hyde</a>
+        <div>
+          <hr style="height:1px;border:none;color:#ffffff;background-color:#ffffff;"/>
+          <a href="https://github.com/royr2/royr2.github.io" style="color:#ff00bf" target="_blank"><img style = "float:left; padding: 5px" src = "http://tinyurl.com/kpfzp6d" height = 50 width = 50></img></a>
+          <a href="http://www.linkedin.com/in/riddhimanr" style="color:#00a7ff"><img style = "padding: 5px" src = "http://tinyurl.com/nk3b8sc" height = 50 width = 50></img></a>
+
+          <p style = "color:#cccccc">Built using <a href = "http://jekyllrb.com"> jekyll </a> and <a href = "http://andhyde.com/"> hyde</a></p>
         </div>
 	  </div>
     </header>
@@ -56,95 +53,95 @@
 
 <p>Here’s to wishing to everyone a very <strong>Happy New Year !</strong></p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1"># install.packages(&quot;jpeg&quot;) </span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1"># install.packages("jpeg") 
+</span>
+<span class="n">library</span><span class="p">(</span><span class="n">jpeg</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">plotly</span><span class="p">)</span>
 
-<span class="kn">library</span><span class="p">(</span>jpeg<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>plotly<span class="p">)</span>
+<span class="c1"># Download a jpeg file from imgur
+</span><span class="n">URL</span> <span class="o">&lt;-</span> <span class="s2">"http://i.imgur.com/FWsFq6r.jpg"</span>
+<span class="n">file</span> <span class="o">&lt;-</span> <span class="n">tempfile</span><span class="p">()</span>
+<span class="n">download.file</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s2">"wb"</span><span class="p">)</span>
 
-<span class="c1"># Download a jpeg file from imgur</span>
-URL <span class="o">&lt;-</span> <span class="s">&quot;http://i.imgur.com/FWsFq6r.jpg&quot;</span>
-file <span class="o">&lt;-</span> <span class="kp">tempfile</span><span class="p">()</span>
-download.file<span class="p">(</span>URL<span class="p">,</span> <span class="kp">file</span><span class="p">,</span> mode <span class="o">=</span> <span class="s">&quot;wb&quot;</span><span class="p">)</span>
+<span class="c1"># Read in JPEG file
+</span><span class="n">j</span> <span class="o">&lt;-</span> <span class="n">readJPEG</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+<span class="n">j</span> <span class="o">&lt;-</span> <span class="n">j</span><span class="p">[,,</span><span class="m">1</span><span class="p">]</span>
 
-<span class="c1"># Read in JPEG file</span>
-j <span class="o">&lt;-</span> readJPEG<span class="p">(</span><span class="kp">file</span><span class="p">)</span>
-j <span class="o">&lt;-</span> j<span class="p">[,,</span><span class="m">1</span><span class="p">]</span>
+<span class="c1"># Create an empty matrix
+</span><span class="n">img.mat</span> <span class="o">&lt;-</span>  <span class="n">mat.or.vec</span><span class="p">(</span><span class="n">nrow</span><span class="p">(</span><span class="n">j</span><span class="p">),</span> <span class="n">ncol</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
 
-<span class="c1"># Create an empty matrix</span>
-img.mat <span class="o">&lt;-</span>  <span class="kp">mat.or.vec</span><span class="p">(</span><span class="kp">nrow</span><span class="p">(</span>j<span class="p">),</span> <span class="kp">ncol</span><span class="p">(</span>j<span class="p">))</span>
+<span class="c1"># Identify elements where there is data
+</span><span class="n">idx</span> <span class="o">&lt;-</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="m">0</span>
 
-<span class="c1"># Identify elements where there is data</span>
-idx <span class="o">&lt;-</span> j <span class="o">&gt;</span> <span class="m">0</span>
+<span class="c1"># Add some glitter like effect
+</span><span class="n">img.mat</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">&lt;-</span>  <span class="n">sample</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="n">by</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">),</span> <span class="n">size</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">replace</span> <span class="o">=</span> <span class="n">T</span><span class="p">)</span>
 
-<span class="c1"># Add some glitter like effect</span>
-img.mat<span class="p">[</span>idx<span class="p">]</span> <span class="o">&lt;-</span>  <span class="kp">sample</span><span class="p">(</span>x <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span>by <span class="o">=</span> <span class="m">0.1</span><span class="p">),</span> size <span class="o">=</span> <span class="kp">sum</span><span class="p">(</span>idx<span class="p">),</span> replace <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+<span class="c1"># Add some glitter to background
+</span><span class="n">idx</span> <span class="o">&lt;-</span>  <span class="n">j</span> <span class="o">==</span> <span class="m">0</span>
+<span class="n">img.mat</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">&lt;-</span>  <span class="n">sample</span><span class="p">(</span><span class="n">seq</span><span class="p">(</span><span class="m">0.7</span><span class="p">,</span><span class="m">0.9</span><span class="p">,</span><span class="m">0.01</span><span class="p">),</span> <span class="n">size</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">replace</span> <span class="o">=</span> <span class="n">T</span><span class="p">)</span>
 
-<span class="c1"># Add some glitter to background</span>
-idx <span class="o">&lt;-</span>  j <span class="o">==</span> <span class="m">0</span>
-img.mat<span class="p">[</span>idx<span class="p">]</span> <span class="o">&lt;-</span>  <span class="kp">sample</span><span class="p">(</span><span class="kp">seq</span><span class="p">(</span><span class="m">0.7</span><span class="p">,</span><span class="m">0.9</span><span class="p">,</span><span class="m">0.01</span><span class="p">),</span> size <span class="o">=</span> <span class="kp">sum</span><span class="p">(</span>idx<span class="p">),</span> replace <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+<span class="c1"># Invert the matrix or else it prints upside down
+</span><span class="n">img.mat</span><span class="p">[</span><span class="n">nrow</span><span class="p">(</span><span class="n">img.mat</span><span class="p">)</span><span class="o">:</span><span class="m">1</span><span class="p">,]</span> <span class="o">&lt;-</span> <span class="n">img.mat</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="n">nrow</span><span class="p">(</span><span class="n">img.mat</span><span class="p">),]</span>
 
-<span class="c1"># Invert the matrix or else it prints upside down</span>
-img.mat<span class="p">[</span><span class="kp">nrow</span><span class="p">(</span>img.mat<span class="p">)</span><span class="o">:</span><span class="m">1</span><span class="p">,]</span> <span class="o">&lt;-</span> img.mat<span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="kp">nrow</span><span class="p">(</span>img.mat<span class="p">),]</span>
-
-<span class="c1"># Plot !!!</span>
-x.axisSettings <span class="o">&lt;-</span> <span class="kt">list</span><span class="p">(</span>
-  title <span class="o">=</span> <span class="s">&quot;Learn from yesterday, live for today, hope for tomorrow. The important thing is not to stop questioning. -Albert Einstein&quot;</span><span class="p">,</span>
-  titlefont <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>
-    family <span class="o">=</span> <span class="s">&#39;Arial, sans-serif&#39;</span><span class="p">,</span>
-    size <span class="o">=</span> <span class="m">12</span><span class="p">,</span>
-    color <span class="o">=</span> <span class="s">&#39;black&#39;</span>
+<span class="c1"># Plot !!!
+</span><span class="n">x.axisSettings</span> <span class="o">&lt;-</span> <span class="n">list</span><span class="p">(</span>
+  <span class="n">title</span> <span class="o">=</span> <span class="s2">"Learn from yesterday, live for today, hope for tomorrow. The important thing is not to stop questioning. -Albert Einstein"</span><span class="p">,</span>
+  <span class="n">titlefont</span> <span class="o">=</span> <span class="n">list</span><span class="p">(</span>
+    <span class="n">family</span> <span class="o">=</span> <span class="s1">'Arial, sans-serif'</span><span class="p">,</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="m">12</span><span class="p">,</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="s1">'black'</span>
   <span class="p">),</span>
-  zeroline <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span>
-  showline <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span>
-  showticklabels <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span>
-  showgrid <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span>
-  ticks <span class="o">=</span> <span class="s">&quot;&quot;</span>
+  <span class="n">zeroline</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">,</span>
+  <span class="n">showline</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">,</span>
+  <span class="n">showticklabels</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">,</span>
+  <span class="n">showgrid</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">,</span>
+  <span class="n">ticks</span> <span class="o">=</span> <span class="s2">""</span>
 <span class="p">)</span>
 
-y.axisSettings <span class="o">&lt;-</span> <span class="kt">list</span><span class="p">(</span>
-  title <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
-  zeroline <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span>
-  showline <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span>
-  showticklabels <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span>
-  showgrid <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span>
-  ticks <span class="o">=</span> <span class="s">&quot;&quot;</span>
+<span class="n">y.axisSettings</span> <span class="o">&lt;-</span> <span class="n">list</span><span class="p">(</span>
+  <span class="n">title</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+  <span class="n">zeroline</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">,</span>
+  <span class="n">showline</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">,</span>
+  <span class="n">showticklabels</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">,</span>
+  <span class="n">showgrid</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">,</span>
+  <span class="n">ticks</span> <span class="o">=</span> <span class="s2">""</span>
 <span class="p">)</span>
 
 
-bordercolor <span class="o">=</span> <span class="s">&quot;#ffa64d&quot;</span>
-borderwidth <span class="o">=</span> <span class="m">20</span>
+<span class="n">bordercolor</span> <span class="o">=</span> <span class="s2">"#ffa64d"</span>
+<span class="n">borderwidth</span> <span class="o">=</span> <span class="m">20</span>
 
-trianglecolor <span class="o">=</span> <span class="s">&quot;#009933&quot;</span>
+<span class="n">trianglecolor</span> <span class="o">=</span> <span class="s2">"#009933"</span>
 
-nCol <span class="o">=</span> <span class="kp">ncol</span><span class="p">(</span>img.mat<span class="p">)</span>
-nRow <span class="o">=</span> <span class="kp">nrow</span><span class="p">(</span>img.mat<span class="p">)</span>
+<span class="n">nCol</span> <span class="o">=</span> <span class="n">ncol</span><span class="p">(</span><span class="n">img.mat</span><span class="p">)</span>
+<span class="n">nRow</span> <span class="o">=</span> <span class="n">nrow</span><span class="p">(</span><span class="n">img.mat</span><span class="p">)</span>
 
-plot_ly<span class="p">(</span>z <span class="o">=</span> img.mat<span class="p">,</span> colorscale <span class="o">=</span> <span class="s">&quot;Hot&quot;</span><span class="p">,</span> type <span class="o">=</span> <span class="s">&quot;heatmap&quot;</span><span class="p">,</span> showscale <span class="o">=</span> <span class="bp">F</span><span class="p">,</span> hoverinfo <span class="o">=</span> <span class="s">&quot;x+y&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  layout<span class="p">(</span>xaxis <span class="o">=</span> x.axisSettings<span class="p">,</span>
-         yaxis <span class="o">=</span> y.axisSettings<span class="p">,</span>
+<span class="n">plot_ly</span><span class="p">(</span><span class="n">z</span> <span class="o">=</span> <span class="n">img.mat</span><span class="p">,</span> <span class="n">colorscale</span> <span class="o">=</span> <span class="s2">"Hot"</span><span class="p">,</span> <span class="n">type</span> <span class="o">=</span> <span class="s2">"heatmap"</span><span class="p">,</span> <span class="n">showscale</span> <span class="o">=</span> <span class="n">F</span><span class="p">,</span> <span class="n">hoverinfo</span> <span class="o">=</span> <span class="s2">"x+y"</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="n">layout</span><span class="p">(</span><span class="n">xaxis</span> <span class="o">=</span> <span class="n">x.axisSettings</span><span class="p">,</span>
+         <span class="n">yaxis</span> <span class="o">=</span> <span class="n">y.axisSettings</span><span class="p">,</span>
 
-         <span class="c1"># Add a border</span>
-         shapes <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>
+         <span class="c1"># Add a border
+</span>         <span class="n">shapes</span> <span class="o">=</span> <span class="n">list</span><span class="p">(</span>
 
-           <span class="c1"># left border</span>
-           <span class="kt">list</span><span class="p">(</span>type <span class="o">=</span> <span class="s">&#39;rect&#39;</span><span class="p">,</span> fillcolor <span class="o">=</span> bordercolor<span class="p">,</span> line <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>color <span class="o">=</span> bordercolor<span class="p">),</span>
-                x0 <span class="o">=</span> <span class="m">0</span><span class="p">,</span> x1 <span class="o">=</span> borderwidth<span class="p">,</span>
-                y0 <span class="o">=</span> <span class="m">0</span><span class="p">,</span> y1 <span class="o">=</span> nRow<span class="p">),</span>
+           <span class="c1"># left border
+</span>           <span class="n">list</span><span class="p">(</span><span class="n">type</span> <span class="o">=</span> <span class="s1">'rect'</span><span class="p">,</span> <span class="n">fillcolor</span> <span class="o">=</span> <span class="n">bordercolor</span><span class="p">,</span> <span class="n">line</span> <span class="o">=</span> <span class="n">list</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">bordercolor</span><span class="p">),</span>
+                <span class="n">x0</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">borderwidth</span><span class="p">,</span>
+                <span class="n">y0</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">nRow</span><span class="p">),</span>
 
-           <span class="c1"># Right border</span>
-           <span class="kt">list</span><span class="p">(</span>type <span class="o">=</span> <span class="s">&#39;rect&#39;</span><span class="p">,</span> fillcolor <span class="o">=</span> bordercolor<span class="p">,</span> line <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>color <span class="o">=</span> bordercolor<span class="p">),</span>
-                x0 <span class="o">=</span> nCol <span class="o">-</span> borderwidth<span class="p">,</span> x1 <span class="o">=</span> nCol<span class="p">,</span>
-                y0 <span class="o">=</span> <span class="m">0</span><span class="p">,</span> y1 <span class="o">=</span> nRow<span class="p">),</span>
+           <span class="c1"># Right border
+</span>           <span class="n">list</span><span class="p">(</span><span class="n">type</span> <span class="o">=</span> <span class="s1">'rect'</span><span class="p">,</span> <span class="n">fillcolor</span> <span class="o">=</span> <span class="n">bordercolor</span><span class="p">,</span> <span class="n">line</span> <span class="o">=</span> <span class="n">list</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">bordercolor</span><span class="p">),</span>
+                <span class="n">x0</span> <span class="o">=</span> <span class="n">nCol</span> <span class="o">-</span> <span class="n">borderwidth</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">nCol</span><span class="p">,</span>
+                <span class="n">y0</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">nRow</span><span class="p">),</span>
 
-           <span class="c1"># Top border</span>
-           <span class="kt">list</span><span class="p">(</span>type <span class="o">=</span> <span class="s">&#39;rect&#39;</span><span class="p">,</span> fillcolor <span class="o">=</span> bordercolor<span class="p">,</span> line <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>color <span class="o">=</span> bordercolor<span class="p">),</span>
-                x0 <span class="o">=</span> <span class="m">0</span><span class="p">,</span> x1 <span class="o">=</span> nCol<span class="p">,</span>
-                y0 <span class="o">=</span> nRow<span class="p">,</span> y1 <span class="o">=</span> nRow <span class="o">-</span> borderwidth<span class="p">),</span>
+           <span class="c1"># Top border
+</span>           <span class="n">list</span><span class="p">(</span><span class="n">type</span> <span class="o">=</span> <span class="s1">'rect'</span><span class="p">,</span> <span class="n">fillcolor</span> <span class="o">=</span> <span class="n">bordercolor</span><span class="p">,</span> <span class="n">line</span> <span class="o">=</span> <span class="n">list</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">bordercolor</span><span class="p">),</span>
+                <span class="n">x0</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">nCol</span><span class="p">,</span>
+                <span class="n">y0</span> <span class="o">=</span> <span class="n">nRow</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">nRow</span> <span class="o">-</span> <span class="n">borderwidth</span><span class="p">),</span>
 
-           <span class="c1"># Bottom border</span>
-           <span class="kt">list</span><span class="p">(</span>type <span class="o">=</span> <span class="s">&#39;rect&#39;</span><span class="p">,</span> fillcolor <span class="o">=</span> bordercolor<span class="p">,</span> line <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>color <span class="o">=</span> bordercolor<span class="p">),</span>
-                x0 <span class="o">=</span> <span class="m">0</span><span class="p">,</span> x1 <span class="o">=</span> nCol<span class="p">,</span>
-                y0 <span class="o">=</span> <span class="m">0</span><span class="p">,</span> y1 <span class="o">=</span> borderwidth<span class="p">)))</span></code></pre></figure>
+           <span class="c1"># Bottom border
+</span>           <span class="n">list</span><span class="p">(</span><span class="n">type</span> <span class="o">=</span> <span class="s1">'rect'</span><span class="p">,</span> <span class="n">fillcolor</span> <span class="o">=</span> <span class="n">bordercolor</span><span class="p">,</span> <span class="n">line</span> <span class="o">=</span> <span class="n">list</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">bordercolor</span><span class="p">),</span>
+                <span class="n">x0</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">nCol</span><span class="p">,</span>
+                <span class="n">y0</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">borderwidth</span><span class="p">)))</span></code></pre></figure>
 
 <p><embed src = "/assets/figures/HappyNewYear/HappyNewYear.html" height = 600px width = 800px /></p>
 
@@ -153,6 +150,15 @@ plot_ly<span class="p">(</span>z <span class="o">=</span> img.mat<span class="p"
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2016/02/18/Data-Table-Tutorial.html">
+            A data.table Tutorial
+            <small>18 Feb 2016</small>
+          </a>
+        </h3>
+      </li>
     
       <li>
         <h3>
@@ -168,15 +174,6 @@ plot_ly<span class="p">(</span>z <span class="o">=</span> img.mat<span class="p"
           <a href="/2014/09/15/lm-vs-lmRob.html">
             lm() vs lmRob()
             <small>15 Sep 2014</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/2014/06/10/Clustering.html">
-            Clustering
-            <small>10 Jun 2014</small>
           </a>
         </h3>
       </li>

@@ -27,23 +27,20 @@
   <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 </head>
 
- 
+
    <body>
 
     <header class="masthead">
       <div class="masthead-inner">
         <h1><a href = "/">R&sup2</a></h1>
-        <p class="lead">A personal blog about my fumblings with statistics, finance and anything  R</p>
+        <p class="lead" style = "color:#cccccc">A personal blog about my fumblings with statistics, finance and anything  R</p>
 
-        <div class="colophon">
-          <ul class="colophon-links">
-            <li>
-              View project on <a href="https://github.com/royr2/royr2.github.io">GitHub</a>
-            </li>
-			<li><a href="http://www.linkedin.com/in/riddhimanr"><b>Linkedin</b></a><li>
-		  </ul>
-		  
-			Built using <a href = "http://jekyllrb.com"> jekyll </a> and <a href = "http://andhyde.com/"> hyde</a>
+        <div>
+          <hr style="height:1px;border:none;color:#ffffff;background-color:#ffffff;"/>
+          <a href="https://github.com/royr2/royr2.github.io" style="color:#ff00bf" target="_blank"><img style = "float:left; padding: 5px" src = "http://tinyurl.com/kpfzp6d" height = 50 width = 50></img></a>
+          <a href="http://www.linkedin.com/in/riddhimanr" style="color:#00a7ff"><img style = "padding: 5px" src = "http://tinyurl.com/nk3b8sc" height = 50 width = 50></img></a>
+
+          <p style = "color:#cccccc">Built using <a href = "http://jekyllrb.com"> jekyll </a> and <a href = "http://andhyde.com/"> hyde</a></p>
         </div>
 	  </div>
     </header>
@@ -79,17 +76,17 @@
 
 <p>Lets first install the required package.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Install the package called &quot;Performance Analytics&quot;</span>
-install.packages<span class="p">(</span><span class="s">&quot;PerformanceAnalytics&quot;</span><span class="p">,</span>repos<span class="o">=</span><span class="s">&quot;http://cran.us.r-project.org&quot;</span><span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Install the package called "Performance Analytics"
+</span><span class="n">install.packages</span><span class="p">(</span><span class="s2">"PerformanceAnalytics"</span><span class="p">,</span><span class="n">repos</span><span class="o">=</span><span class="s2">"http://cran.us.r-project.org"</span><span class="p">)</span>
 
-<span class="c1">#Loads package into memory</span>
-<span class="kn">library</span><span class="p">(</span>PerformanceAnalytics<span class="p">)</span>
+<span class="c1">#Loads package into memory
+</span><span class="n">library</span><span class="p">(</span><span class="n">PerformanceAnalytics</span><span class="p">)</span>
 
-<span class="c1">#Load &#39;Managers&#39; dataset</span>
-data<span class="p">(</span>managers<span class="p">)</span></code></pre></figure>
+<span class="c1">#Load 'Managers' dataset
+</span><span class="n">data</span><span class="p">(</span><span class="n">managers</span><span class="p">)</span></code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#The data sets looks like this</span>
-<span class="kp">head</span><span class="p">(</span>managers<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#The data sets looks like this
+</span><span class="n">head</span><span class="p">(</span><span class="n">managers</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">##               HAM1 HAM2    HAM3    HAM4 HAM5 HAM6 EDHEC LS EQ SP500 TR
 ## 1996-01-31  0.0074   NA  0.0349  0.0222   NA   NA          NA   0.0340
@@ -126,11 +123,11 @@ data<span class="p">(</span>managers<span class="p">)</span></code></pre></figur
 
 <p>Lets try to plot the kind of relationship <strong>HAM2</strong> has with each of the <strong>risk factors</strong>. We’ll use the <strong>pairs</strong> function.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Create a dataframe using HAM2 and the risk factors</span>
-df<span class="o">=</span><span class="kt">data.frame</span><span class="p">(</span>managers<span class="p">[,</span><span class="kt">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">7</span><span class="o">:</span><span class="m">10</span><span class="p">)])</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Create a dataframe using HAM2 and the risk factors
+</span><span class="n">df</span><span class="o">=</span><span class="n">data.frame</span><span class="p">(</span><span class="n">managers</span><span class="p">[,</span><span class="n">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">7</span><span class="o">:</span><span class="m">10</span><span class="p">)])</span>
 
-<span class="c1">#The data frame should look like this</span>
-<span class="kp">head</span><span class="p">(</span>df<span class="p">)</span></code></pre></figure>
+<span class="c1">#The data frame should look like this
+</span><span class="n">head</span><span class="p">(</span><span class="n">df</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">##            HAM2 EDHEC.LS.EQ SP500.TR US.10Y.TR US.3m.TR
 ## 1996-01-31   NA          NA   0.0340   0.00380  0.00456
@@ -140,8 +137,8 @@ df<span class="o">=</span><span class="kt">data.frame</span><span class="p">(</s
 ## 1996-05-31   NA          NA   0.0258  -0.00543  0.00443
 ## 1996-06-30   NA          NA   0.0038   0.01507  0.00412</code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Pairs plot</span>
-pairs<span class="p">(</span>df<span class="p">,</span>main<span class="o">=</span><span class="s">&quot;Pairs Plot for HAM2&quot;</span><span class="p">,</span>pch<span class="o">=</span><span class="m">16</span><span class="p">,</span>col<span class="o">=</span><span class="s">&quot;slateblue&quot;</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Pairs plot
+</span><span class="n">pairs</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">main</span><span class="o">=</span><span class="s2">"Pairs Plot for HAM2"</span><span class="p">,</span><span class="n">pch</span><span class="o">=</span><span class="m">16</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="s2">"slateblue"</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/BootStepAIC/managers-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
@@ -153,12 +150,12 @@ pairs<span class="p">(</span>df<span class="p">,</span>main<span class="o">=</sp
 
 <p>As a first case, lets use all the available risk factors to predict future returns for <strong>HAM2</strong>. We’ll be using the <strong>lm</strong> function.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Formula for lm function</span>
-form<span class="o">=</span>formula<span class="p">(</span>HAM2<span class="o">~</span>EDHEC.LS.EQ <span class="o">+</span> SP500.TR <span class="o">+</span> US.10Y.TR <span class="o">+</span> US.3m.TR<span class="p">)</span>
-fit<span class="o">=</span>lm<span class="p">(</span>form<span class="p">,</span>data<span class="o">=</span>df<span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Formula for lm function
+</span><span class="n">form</span><span class="o">=</span><span class="n">formula</span><span class="p">(</span><span class="n">HAM2</span><span class="o">~</span><span class="n">EDHEC.LS.EQ</span> <span class="o">+</span> <span class="n">SP500.TR</span> <span class="o">+</span> <span class="n">US.10Y.TR</span> <span class="o">+</span> <span class="n">US.3m.TR</span><span class="p">)</span>
+<span class="n">fit</span><span class="o">=</span><span class="n">lm</span><span class="p">(</span><span class="n">form</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
 
-<span class="c1">#The output from the summary function on a lm object should look like this</span>
-<span class="kp">summary</span><span class="p">(</span>fit<span class="p">)</span></code></pre></figure>
+<span class="c1">#The output from the summary function on a lm object should look like this
+</span><span class="n">summary</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## 
 ## Call:
@@ -176,7 +173,7 @@ fit<span class="o">=</span>lm<span class="p">(</span>form<span class="p">,</span
 ## US.10Y.TR    0.045813   0.116777   0.392   0.6956    
 ## US.3m.TR     1.429513   1.546454   0.924   0.3572    
 ## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Residual standard error: 0.0253 on 115 degrees of freedom
 ##   (12 observations deleted due to missingness)
@@ -185,15 +182,15 @@ fit<span class="o">=</span>lm<span class="p">(</span>form<span class="p">,</span
 
 <p>We didn’t do so bad. We got an R-Square of around <em>50%</em>. Our adjusted and multiple R-Square values are close to each other, we had enough degrees of freedom and most of our predictor variables are statistically significant.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Lets check fitted vs actual values</span>
-plot<span class="p">(</span>fit<span class="o">$</span>model<span class="p">[,</span><span class="m">1</span><span class="p">],</span>fit<span class="o">$</span>fitted.values<span class="p">,</span>  
-     main<span class="o">=</span><span class="s">&quot;Actual vs Fitted values&quot;</span><span class="p">,</span>  
-     pch<span class="o">=</span><span class="m">16</span><span class="p">,</span>col<span class="o">=</span><span class="s">&quot;indianred&quot;</span><span class="p">,</span>cex<span class="o">=</span><span class="m">1.5</span><span class="p">,</span>  
-     xlab<span class="o">=</span><span class="s">&quot;Actual Values&quot;</span><span class="p">,</span>ylab<span class="o">=</span><span class="s">&quot;Fitted Values&quot;</span><span class="p">)</span>  
-grid<span class="p">()</span>
-rstd<span class="o">=</span><span class="kp">round</span><span class="p">(</span>sd<span class="p">(</span>fit<span class="o">$</span>residuals<span class="p">),</span><span class="m">4</span><span class="p">)</span>
-legend<span class="p">(</span><span class="s">&quot;bottomleft&quot;</span><span class="p">,</span>  
-       legend<span class="o">=</span><span class="kp">paste</span><span class="p">(</span><span class="s">&quot;Residual std err = &quot;</span><span class="p">,</span>rstd<span class="p">),</span>bty<span class="o">=</span><span class="s">&#39;n&#39;</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Lets check fitted vs actual values
+</span><span class="n">plot</span><span class="p">(</span><span class="n">fit</span><span class="o">$</span><span class="n">model</span><span class="p">[,</span><span class="m">1</span><span class="p">],</span><span class="n">fit</span><span class="o">$</span><span class="n">fitted.values</span><span class="p">,</span>  
+     <span class="n">main</span><span class="o">=</span><span class="s2">"Actual vs Fitted values"</span><span class="p">,</span>  
+     <span class="n">pch</span><span class="o">=</span><span class="m">16</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="s2">"indianred"</span><span class="p">,</span><span class="n">cex</span><span class="o">=</span><span class="m">1.5</span><span class="p">,</span>  
+     <span class="n">xlab</span><span class="o">=</span><span class="s2">"Actual Values"</span><span class="p">,</span><span class="n">ylab</span><span class="o">=</span><span class="s2">"Fitted Values"</span><span class="p">)</span>  
+<span class="n">grid</span><span class="p">()</span>
+<span class="n">rstd</span><span class="o">=</span><span class="n">round</span><span class="p">(</span><span class="n">sd</span><span class="p">(</span><span class="n">fit</span><span class="o">$</span><span class="n">residuals</span><span class="p">),</span><span class="m">4</span><span class="p">)</span>
+<span class="n">legend</span><span class="p">(</span><span class="s2">"bottomleft"</span><span class="p">,</span>  
+       <span class="n">legend</span><span class="o">=</span><span class="n">paste</span><span class="p">(</span><span class="s2">"Residual std err = "</span><span class="p">,</span><span class="n">rstd</span><span class="p">),</span><span class="n">bty</span><span class="o">=</span><span class="s1">'n'</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/BootStepAIC/plot lm-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
@@ -201,12 +198,12 @@ legend<span class="p">(</span><span class="s">&quot;bottomleft&quot;</span><span
 
 <p>Now lets see if we can improve on the model by removing any of the predictor variables. We’ll use the <strong>stepAIC</strong> function in the <strong>MASS</strong> package.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">install.packages<span class="p">(</span><span class="s">&quot;MASS&quot;</span><span class="p">,</span>repos<span class="o">=</span><span class="s">&quot;http://cran.us.r-project.org&quot;</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">install.packages</span><span class="p">(</span><span class="s2">"MASS"</span><span class="p">,</span><span class="n">repos</span><span class="o">=</span><span class="s2">"http://cran.us.r-project.org"</span><span class="p">)</span></code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#&quot;::&quot; can be used to make a reference to a specific library</span>
-<span class="c1">#I am using trace = F to suppress the output from the stepAIC function</span>
-stepfit<span class="o">=</span>MASS<span class="o">::</span>stepAIC<span class="p">(</span>object<span class="o">=</span>fit<span class="p">,</span>scope<span class="o">=</span><span class="kt">list</span><span class="p">(</span>upper<span class="o">=~</span><span class="m">.</span><span class="p">,</span>lower<span class="o">=~</span><span class="m">1</span><span class="p">),</span>direction<span class="o">=</span><span class="s">&quot;backward&quot;</span><span class="p">,</span>trace<span class="o">=</span><span class="bp">F</span><span class="p">)</span>
-<span class="kp">summary</span><span class="p">(</span>stepfit<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#"::" can be used to make a reference to a specific library
+#I am using trace = F to suppress the output from the stepAIC function
+</span><span class="n">stepfit</span><span class="o">=</span><span class="n">MASS</span><span class="o">::</span><span class="n">stepAIC</span><span class="p">(</span><span class="n">object</span><span class="o">=</span><span class="n">fit</span><span class="p">,</span><span class="n">scope</span><span class="o">=</span><span class="n">list</span><span class="p">(</span><span class="n">upper</span><span class="o">=~</span><span class="err">.</span><span class="p">,</span><span class="n">lower</span><span class="o">=~</span><span class="m">1</span><span class="p">),</span><span class="n">direction</span><span class="o">=</span><span class="s2">"backward"</span><span class="p">,</span><span class="n">trace</span><span class="o">=</span><span class="n">F</span><span class="p">)</span>
+<span class="n">summary</span><span class="p">(</span><span class="n">stepfit</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## 
 ## Call:
@@ -222,7 +219,7 @@ stepfit<span class="o">=</span>MASS<span class="o">::</span>stepAIC<span class="
 ## EDHEC.LS.EQ  1.5548911  0.1645687   9.448 4.35e-16 ***
 ## SP500.TR    -0.2007421  0.0759434  -2.643  0.00933 ** 
 ## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Residual standard error: 0.02521 on 117 degrees of freedom
 ##   (12 observations deleted due to missingness)
@@ -259,14 +256,14 @@ stepfit<span class="o">=</span>MASS<span class="o">::</span>stepAIC<span class="
 
 <p>What if we wanted to add a treasury variable to the mix? Which one would you pick? If we had some prior knowledge regarding HAM2 portfolio holdings, we might be able to make a qualitative judgement regarding whether to use the 10 year or the 3 month treasury yield. If not, we could use the bootstrap procedure to derive some useful information.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Install the package</span>
-install.packages<span class="p">(</span><span class="s">&quot;bootStepAIC&quot;</span><span class="p">,</span>repos<span class="o">=</span><span class="s">&quot;http://cran.us.r-project.org&quot;</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Install the package
+</span><span class="n">install.packages</span><span class="p">(</span><span class="s2">"bootStepAIC"</span><span class="p">,</span><span class="n">repos</span><span class="o">=</span><span class="s2">"http://cran.us.r-project.org"</span><span class="p">)</span></code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Run bootstrap procedure</span>
-bootStepAIC<span class="o">::</span>boot.stepAIC<span class="p">(</span>object<span class="o">=</span>fit<span class="p">,</span>data<span class="o">=</span>df<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Run bootstrap procedure
+</span><span class="n">bootStepAIC</span><span class="o">::</span><span class="n">boot.stepAIC</span><span class="p">(</span><span class="n">object</span><span class="o">=</span><span class="n">fit</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## 
-## Summary of Bootstrapping the &#39;stepAIC()&#39; procedure for
+## Summary of Bootstrapping the 'stepAIC()' procedure for
 ## 
 ## Call:
 ## lm(formula = form, data = df)
@@ -366,6 +363,15 @@ Feel free to leave comments below. Thanks !</p>
     
       <li>
         <h3>
+          <a href="/2016/02/18/Data-Table-Tutorial.html">
+            A data.table Tutorial
+            <small>18 Feb 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <a href="/2015/12/29/HappyNewYear.html">
             Happy New Year using a Heatmap !?
             <small>29 Dec 2015</small>
@@ -378,15 +384,6 @@ Feel free to leave comments below. Thanks !</p>
           <a href="/2014/10/20/RChart.html">
             RCharts
             <small>20 Oct 2014</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/2014/09/15/lm-vs-lmRob.html">
-            lm() vs lmRob()
-            <small>15 Sep 2014</small>
           </a>
         </h3>
       </li>

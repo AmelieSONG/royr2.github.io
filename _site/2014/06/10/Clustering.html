@@ -27,23 +27,20 @@
   <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 </head>
 
- 
+
    <body>
 
     <header class="masthead">
       <div class="masthead-inner">
         <h1><a href = "/">R&sup2</a></h1>
-        <p class="lead">A personal blog about my fumblings with statistics, finance and anything  R</p>
+        <p class="lead" style = "color:#cccccc">A personal blog about my fumblings with statistics, finance and anything  R</p>
 
-        <div class="colophon">
-          <ul class="colophon-links">
-            <li>
-              View project on <a href="https://github.com/royr2/royr2.github.io">GitHub</a>
-            </li>
-			<li><a href="http://www.linkedin.com/in/riddhimanr"><b>Linkedin</b></a><li>
-		  </ul>
-		  
-			Built using <a href = "http://jekyllrb.com"> jekyll </a> and <a href = "http://andhyde.com/"> hyde</a>
+        <div>
+          <hr style="height:1px;border:none;color:#ffffff;background-color:#ffffff;"/>
+          <a href="https://github.com/royr2/royr2.github.io" style="color:#ff00bf" target="_blank"><img style = "float:left; padding: 5px" src = "http://tinyurl.com/kpfzp6d" height = 50 width = 50></img></a>
+          <a href="http://www.linkedin.com/in/riddhimanr" style="color:#00a7ff"><img style = "padding: 5px" src = "http://tinyurl.com/nk3b8sc" height = 50 width = 50></img></a>
+
+          <p style = "color:#cccccc">Built using <a href = "http://jekyllrb.com"> jekyll </a> and <a href = "http://andhyde.com/"> hyde</a></p>
         </div>
 	  </div>
     </header>
@@ -61,35 +58,35 @@
 
 <p>Let’s first install and load all the packages we need.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Install Packages </span>
-<span class="c1">#install.packages(c(&quot;zoo&quot;, &quot;RColorBrewer&quot;, &quot;rgl&quot;,&quot;quantmod&quot;,&quot;ggplot2&quot;))</span>
-<span class="kp">options</span><span class="p">(</span>warn<span class="o">=</span><span class="m">-1</span><span class="p">)</span>
-<span class="c1">#Load Packages </span>
-<span class="kn">library</span><span class="p">(</span><span class="kp">class</span><span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>zoo<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>RColorBrewer<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>rgl<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>quantmod<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>ggplot2<span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Install Packages 
+#install.packages(c("zoo", "RColorBrewer", "rgl","quantmod","ggplot2"))
+</span><span class="n">options</span><span class="p">(</span><span class="n">warn</span><span class="o">=</span><span class="m">-1</span><span class="p">)</span>
+<span class="c1">#Load Packages 
+</span><span class="n">library</span><span class="p">(</span><span class="n">class</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">zoo</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">RColorBrewer</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">rgl</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">quantmod</span><span class="p">)</span>
+<span class="n">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span></code></pre></figure>
 
 <p>Next let’s load in the dataset we want to work with.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Clean the workspace</span>
-<span class="kp">rm</span><span class="p">(</span><span class="kt">list</span><span class="o">=</span><span class="kp">ls</span><span class="p">())</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Clean the workspace
+</span><span class="n">rm</span><span class="p">(</span><span class="n">list</span><span class="o">=</span><span class="n">ls</span><span class="p">())</span>
 
-<span class="c1">#Load Data</span>
-dat <span class="o">=</span> read.table<span class="p">(</span>file<span class="o">=</span><span class="s">&quot;financial_indicators.txt&quot;</span><span class="p">,</span>header<span class="o">=</span><span class="bp">T</span><span class="p">,</span>sep<span class="o">=</span><span class="s">&quot;\t&quot;</span><span class="p">)</span></code></pre></figure>
+<span class="c1">#Load Data
+</span><span class="n">dat</span> <span class="o">=</span> <span class="n">read.table</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="s2">"financial_indicators.txt"</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="n">T</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s2">"\t"</span><span class="p">)</span></code></pre></figure>
 
 <p>Let’s look at the data first.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Set some colors</span>
-cols<span class="o">=</span>brewer.pal<span class="p">(</span>n<span class="o">=</span><span class="m">8</span><span class="p">,</span>name<span class="o">=</span><span class="s">&quot;Set1&quot;</span><span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Set some colors
+</span><span class="n">cols</span><span class="o">=</span><span class="n">brewer.pal</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="m">8</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">"Set1"</span><span class="p">)</span>
 
-<span class="c1">#Convert to zoo object</span>
-dat <span class="o">=</span> zoo<span class="p">(</span>x<span class="o">=</span>dat<span class="p">[,</span><span class="m">-1</span><span class="p">],</span>order.by<span class="o">=</span><span class="kp">as.Date</span><span class="p">(</span>dat<span class="p">[,</span><span class="m">1</span><span class="p">],</span>format<span class="o">=</span><span class="s">&quot;%Y-%m-%d&quot;</span><span class="p">))</span>
+<span class="c1">#Convert to zoo object
+</span><span class="n">dat</span> <span class="o">=</span> <span class="n">zoo</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">dat</span><span class="p">[,</span><span class="m">-1</span><span class="p">],</span><span class="n">order.by</span><span class="o">=</span><span class="n">as.Date</span><span class="p">(</span><span class="n">dat</span><span class="p">[,</span><span class="m">1</span><span class="p">],</span><span class="n">format</span><span class="o">=</span><span class="s2">"%Y-%m-%d"</span><span class="p">))</span>
 
-<span class="c1">#Print the first few rows </span>
-<span class="kp">head</span><span class="p">(</span>dat<span class="p">)</span></code></pre></figure>
+<span class="c1">#Print the first few rows 
+</span><span class="n">head</span><span class="p">(</span><span class="n">dat</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">##            CANDH CFNAI CFNAIDIFF CFNAIMA3 EUANDH KCFSI PANDI SOANDI
 ## 1967-03-01 -0.04 -0.49        NA       NA  -0.06    NA -0.37  -0.02
@@ -106,47 +103,47 @@ dat <span class="o">=</span> zoo<span class="p">(</span>x<span class="o">=</span
 ## 1967-07-01      NA      NA
 ## 1967-08-01      NA      NA</code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Plot the data set</span>
-plot<span class="p">(</span>dat<span class="p">,</span>main<span class="o">=</span><span class="s">&quot;Financial Indicators&quot;</span><span class="p">,</span>xlab<span class="o">=</span><span class="s">&quot;Time&quot;</span><span class="p">,</span>col<span class="o">=</span>cols<span class="p">,</span>lwd<span class="o">=</span><span class="m">1</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Plot the data set
+</span><span class="n">plot</span><span class="p">(</span><span class="n">dat</span><span class="p">,</span><span class="n">main</span><span class="o">=</span><span class="s2">"Financial Indicators"</span><span class="p">,</span><span class="n">xlab</span><span class="o">=</span><span class="s2">"Time"</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span><span class="n">lwd</span><span class="o">=</span><span class="m">1</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/Clustering/unnamed-chunk-3-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
 <p>I have got 10 different financial indicators. Let’s reduce the number of dimensions using some principal component analysis.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#PCA Decomposition</span>
-pca <span class="o">=</span> princomp<span class="p">(</span>x<span class="o">=</span>na.omit<span class="p">(</span>dat<span class="p">),</span>cor<span class="o">=</span><span class="bp">T</span><span class="p">,</span>scores<span class="o">=</span><span class="bp">T</span><span class="p">)</span>
-plot<span class="p">(</span>pca<span class="p">,</span>type<span class="o">=</span><span class="s">&quot;lines&quot;</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#PCA Decomposition
+</span><span class="n">pca</span> <span class="o">=</span> <span class="n">princomp</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">na.omit</span><span class="p">(</span><span class="n">dat</span><span class="p">),</span><span class="n">cor</span><span class="o">=</span><span class="n">T</span><span class="p">,</span><span class="n">scores</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">pca</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s2">"lines"</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/Clustering/unnamed-chunk-4-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Take the first three components</span>
-mat <span class="o">=</span> pca<span class="o">$</span>scores<span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">]</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Take the first three components
+</span><span class="n">mat</span> <span class="o">=</span> <span class="n">pca</span><span class="o">$</span><span class="n">scores</span><span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">]</span></code></pre></figure>
 
 <p>I took the first three principal components since it’ll be easier to make plots in 3 dimensions.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r">plot3d<span class="p">(</span>mat<span class="p">,</span>col<span class="o">=</span>cols<span class="p">[</span><span class="m">1</span><span class="p">],</span>size<span class="o">=</span><span class="m">10</span><span class="p">,</span>type<span class="o">=</span><span class="s">&#39;p&#39;</span><span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">plot3d</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="m">1</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s1">'p'</span><span class="p">)</span>
 
-<span class="c1">#Note that the command will create a separate plot window you can interact with.</span></code></pre></figure>
+<span class="err">#</span><span class="n">Note</span> <span class="n">that</span> <span class="n">the</span> <span class="n">command</span> <span class="n">will</span> <span class="n">create</span> <span class="n">a</span> <span class="n">separate</span> <span class="n">plot</span> <span class="n">window</span> <span class="n">you</span> <span class="n">can</span> <span class="n">interact</span> <span class="n">with.</span></code></pre></figure>
 
 <p><img src="/assets/figures/Clustering/Base.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
 <p>Let’s add some time overlays to this plot. Let’s look at recession dates +- 1 year.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#2007 / 2008 Recession</span>
-<span class="c1">#Recession Start Date</span>
-t1 <span class="o">=</span> <span class="s">&quot;2006-12-01&quot;</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#2007 / 2008 Recession
+#Recession Start Date
+</span><span class="n">t1</span> <span class="o">=</span> <span class="s2">"2006-12-01"</span>
 
-<span class="c1">#Recession End Date</span>
-t2 <span class="o">=</span> <span class="s">&quot;2010-06-01&quot;</span>
+<span class="c1">#Recession End Date
+</span><span class="n">t2</span> <span class="o">=</span> <span class="s2">"2010-06-01"</span>
   
-idx <span class="o">=</span> <span class="kp">rownames</span><span class="p">(</span>mat<span class="p">)</span><span class="o">&gt;=</span>t1 <span class="o">&amp;</span> <span class="kp">rownames</span><span class="p">(</span>mat<span class="p">)</span><span class="o">&lt;=</span>t2
-mat.rec <span class="o">=</span> mat<span class="p">[</span>idx<span class="p">,]</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">rownames</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span><span class="o">&gt;=</span><span class="n">t1</span> <span class="o">&amp;</span> <span class="n">rownames</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">t2</span>
+<span class="n">mat.rec</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="n">idx</span><span class="p">,]</span>
 
-<span class="c1">#Base Plot</span>
-plot3d<span class="p">(</span>mat<span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">],</span>col<span class="o">=</span>cols<span class="p">[</span><span class="m">2</span><span class="p">],</span>size<span class="o">=</span><span class="m">10</span><span class="p">,</span>type<span class="o">=</span><span class="s">&#39;p&#39;</span><span class="p">,</span>main<span class="o">=</span><span class="s">&quot;2007/08 Recession (in Black)&quot;</span><span class="p">)</span>
+<span class="c1">#Base Plot
+</span><span class="n">plot3d</span><span class="p">(</span><span class="n">mat</span><span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">],</span><span class="n">col</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="m">2</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s1">'p'</span><span class="p">,</span><span class="n">main</span><span class="o">=</span><span class="s2">"2007/08 Recession (in Black)"</span><span class="p">)</span>
 
-<span class="c1">#Time Overlay</span>
-plot3d<span class="p">(</span>mat.rec<span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">],</span>col<span class="o">=</span><span class="s">&quot;black&quot;</span><span class="p">,</span>size<span class="o">=</span><span class="m">2</span><span class="p">,</span>type<span class="o">=</span><span class="s">&#39;s&#39;</span><span class="p">,</span>add<span class="o">=</span><span class="bp">T</span><span class="p">)</span></code></pre></figure>
+<span class="c1">#Time Overlay
+</span><span class="n">plot3d</span><span class="p">(</span><span class="n">mat.rec</span><span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">],</span><span class="n">col</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s1">'s'</span><span class="p">,</span><span class="n">add</span><span class="o">=</span><span class="n">T</span><span class="p">)</span></code></pre></figure>
 
 <p>The plot looks something like this (recession in black)</p>
 
@@ -154,21 +151,21 @@ plot3d<span class="p">(</span>mat.rec<span class="p">[,</span><span class="m">1<
 
 <p>In comparision, the dot com bubble looks like this:</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Dot Com Bubble</span>
-<span class="c1">#Start Date</span>
-t1 <span class="o">=</span> <span class="s">&quot;2000-03-01&quot;</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Dot Com Bubble
+#Start Date
+</span><span class="n">t1</span> <span class="o">=</span> <span class="s2">"2000-03-01"</span>
 
-<span class="c1">#End Date</span>
-t2 <span class="o">=</span> <span class="s">&quot;2002-11-01&quot;</span>
+<span class="c1">#End Date
+</span><span class="n">t2</span> <span class="o">=</span> <span class="s2">"2002-11-01"</span>
 
-idx <span class="o">=</span> <span class="kp">rownames</span><span class="p">(</span>mat<span class="p">)</span><span class="o">&gt;=</span>t1 <span class="o">&amp;</span> <span class="kp">rownames</span><span class="p">(</span>mat<span class="p">)</span><span class="o">&lt;=</span>t2
-mat.rec <span class="o">=</span> mat<span class="p">[</span>idx<span class="p">,]</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">rownames</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span><span class="o">&gt;=</span><span class="n">t1</span> <span class="o">&amp;</span> <span class="n">rownames</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">t2</span>
+<span class="n">mat.rec</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="n">idx</span><span class="p">,]</span>
 
-<span class="c1">#Base Plot</span>
-plot3d<span class="p">(</span>mat<span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">],</span>col<span class="o">=</span>cols<span class="p">[</span><span class="m">3</span><span class="p">],</span>size<span class="o">=</span><span class="m">10</span><span class="p">,</span>type<span class="o">=</span><span class="s">&#39;p&#39;</span><span class="p">)</span>
+<span class="c1">#Base Plot
+</span><span class="n">plot3d</span><span class="p">(</span><span class="n">mat</span><span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">],</span><span class="n">col</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="m">3</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s1">'p'</span><span class="p">)</span>
 
-<span class="c1">#Time Overlay</span>
-plot3d<span class="p">(</span>mat.rec<span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">],</span>col<span class="o">=</span><span class="s">&quot;black&quot;</span><span class="p">,</span>size<span class="o">=</span><span class="m">2</span><span class="p">,</span>type<span class="o">=</span><span class="s">&#39;s&#39;</span><span class="p">,</span>add<span class="o">=</span><span class="bp">T</span><span class="p">)</span></code></pre></figure>
+<span class="c1">#Time Overlay
+</span><span class="n">plot3d</span><span class="p">(</span><span class="n">mat.rec</span><span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">],</span><span class="n">col</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s1">'s'</span><span class="p">,</span><span class="n">add</span><span class="o">=</span><span class="n">T</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/Clustering/Rec 2.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
@@ -176,117 +173,117 @@ plot3d<span class="p">(</span>mat.rec<span class="p">[,</span><span class="m">1<
 
 <p>Lets use some k-means clustering to visualize this effect</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#K-Means clustering using 2 centers</span>
-clust <span class="o">=</span> kmeans<span class="p">(</span>x<span class="o">=</span>mat<span class="p">,</span>centers<span class="o">=</span><span class="m">2</span><span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#K-Means clustering using 2 centers
+</span><span class="n">clust</span> <span class="o">=</span> <span class="n">kmeans</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">mat</span><span class="p">,</span><span class="n">centers</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
 
-<span class="c1">#Combine data with cluster and color information</span>
-mat <span class="o">=</span> <span class="kt">data.frame</span><span class="p">(</span>mat<span class="p">,</span>cluster <span class="o">=</span> <span class="kp">as.factor</span><span class="p">(</span>clust<span class="o">$</span>cluster<span class="p">))</span>
-mat <span class="o">=</span> <span class="kt">data.frame</span><span class="p">(</span>mat<span class="p">,</span>cols <span class="o">=</span> cols<span class="p">[</span><span class="kp">as.factor</span><span class="p">(</span>clust<span class="o">$</span>cluster<span class="p">)])</span>
+<span class="c1">#Combine data with cluster and color information
+</span><span class="n">mat</span> <span class="o">=</span> <span class="n">data.frame</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">cluster</span> <span class="o">=</span> <span class="n">as.factor</span><span class="p">(</span><span class="n">clust</span><span class="o">$</span><span class="n">cluster</span><span class="p">))</span>
+<span class="n">mat</span> <span class="o">=</span> <span class="n">data.frame</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">cols</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="n">as.factor</span><span class="p">(</span><span class="n">clust</span><span class="o">$</span><span class="n">cluster</span><span class="p">)])</span>
 
-<span class="c1">#Plot</span>
-plot3d<span class="p">(</span>mat<span class="p">,</span>col<span class="o">=</span>mat<span class="p">[,</span><span class="s">&quot;cols&quot;</span><span class="p">],</span>size<span class="o">=</span><span class="m">10</span><span class="p">,</span>type<span class="o">=</span><span class="s">&#39;p&#39;</span><span class="p">)</span>
-text3d<span class="p">(</span>x<span class="o">=</span>clust<span class="o">$</span>centers<span class="p">[,</span><span class="m">1</span><span class="p">],</span>y<span class="o">=</span>clust<span class="o">$</span>centers<span class="p">[,</span><span class="m">2</span><span class="p">],</span>z<span class="o">=</span>clust<span class="o">$</span>centers<span class="p">[,</span><span class="m">3</span><span class="p">],</span>texts<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;c1&quot;</span><span class="p">,</span><span class="s">&quot;c2&quot;</span><span class="p">,</span><span class="s">&quot;c3&quot;</span><span class="p">),</span>col<span class="o">=</span><span class="s">&quot;red&quot;</span><span class="p">,</span>cex<span class="o">=</span><span class="m">2</span><span class="p">)</span></code></pre></figure>
+<span class="c1">#Plot
+</span><span class="n">plot3d</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="n">mat</span><span class="p">[,</span><span class="s2">"cols"</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s1">'p'</span><span class="p">)</span>
+<span class="n">text3d</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">clust</span><span class="o">$</span><span class="n">centers</span><span class="p">[,</span><span class="m">1</span><span class="p">],</span><span class="n">y</span><span class="o">=</span><span class="n">clust</span><span class="o">$</span><span class="n">centers</span><span class="p">[,</span><span class="m">2</span><span class="p">],</span><span class="n">z</span><span class="o">=</span><span class="n">clust</span><span class="o">$</span><span class="n">centers</span><span class="p">[,</span><span class="m">3</span><span class="p">],</span><span class="n">texts</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="s2">"c1"</span><span class="p">,</span><span class="s2">"c2"</span><span class="p">,</span><span class="s2">"c3"</span><span class="p">),</span><span class="n">col</span><span class="o">=</span><span class="s2">"red"</span><span class="p">,</span><span class="n">cex</span><span class="o">=</span><span class="m">2</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/Clustering/Cluster.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
 <p>Most of the points in the 07/08 recession seem to fall in cluster 1. Let’s compare the two in one single plot</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Base Plot</span>
-plot3d<span class="p">(</span>mat<span class="p">,</span>col<span class="o">=</span><span class="s">&quot;gray&quot;</span><span class="p">,</span>size<span class="o">=</span><span class="m">10</span><span class="p">,</span>type<span class="o">=</span><span class="s">&#39;p&#39;</span><span class="p">)</span>
-text3d<span class="p">(</span>x<span class="o">=</span>clust<span class="o">$</span>centers<span class="p">[,</span><span class="m">1</span><span class="p">],</span>y<span class="o">=</span>clust<span class="o">$</span>centers<span class="p">[,</span><span class="m">2</span><span class="p">],</span>z<span class="o">=</span>clust<span class="o">$</span>centers<span class="p">[,</span><span class="m">3</span><span class="p">],</span>texts<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;c1&quot;</span><span class="p">,</span><span class="s">&quot;c2&quot;</span><span class="p">),</span>col<span class="o">=</span><span class="s">&quot;red&quot;</span><span class="p">,</span>cex<span class="o">=</span><span class="m">2</span><span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Base Plot
+</span><span class="n">plot3d</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s1">'p'</span><span class="p">)</span>
+<span class="n">text3d</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">clust</span><span class="o">$</span><span class="n">centers</span><span class="p">[,</span><span class="m">1</span><span class="p">],</span><span class="n">y</span><span class="o">=</span><span class="n">clust</span><span class="o">$</span><span class="n">centers</span><span class="p">[,</span><span class="m">2</span><span class="p">],</span><span class="n">z</span><span class="o">=</span><span class="n">clust</span><span class="o">$</span><span class="n">centers</span><span class="p">[,</span><span class="m">3</span><span class="p">],</span><span class="n">texts</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="s2">"c1"</span><span class="p">,</span><span class="s2">"c2"</span><span class="p">),</span><span class="n">col</span><span class="o">=</span><span class="s2">"red"</span><span class="p">,</span><span class="n">cex</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
 
-<span class="c1">#Compare the two recessions</span>
-<span class="c1">#Housing Bubble in RED</span>
-t1 <span class="o">=</span> <span class="s">&quot;2007-12-01&quot;</span>
-t2 <span class="o">=</span> <span class="s">&quot;2009-06-01&quot;</span>
+<span class="c1">#Compare the two recessions
+#Housing Bubble in RED
+</span><span class="n">t1</span> <span class="o">=</span> <span class="s2">"2007-12-01"</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="s2">"2009-06-01"</span>
   
-idx <span class="o">=</span> <span class="kp">rownames</span><span class="p">(</span>mat<span class="p">)</span><span class="o">&gt;=</span>t1 <span class="o">&amp;</span> <span class="kp">rownames</span><span class="p">(</span>mat<span class="p">)</span><span class="o">&lt;=</span>t2
-mat.rec <span class="o">=</span> mat<span class="p">[</span>idx<span class="p">,]</span>
-plot3d<span class="p">(</span>mat.rec<span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">],</span>col<span class="o">=</span>cols<span class="p">[</span><span class="m">1</span><span class="p">],</span>size<span class="o">=</span><span class="m">2</span><span class="p">,</span>type<span class="o">=</span><span class="s">&#39;s&#39;</span><span class="p">,</span>add<span class="o">=</span><span class="bp">T</span><span class="p">)</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">rownames</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span><span class="o">&gt;=</span><span class="n">t1</span> <span class="o">&amp;</span> <span class="n">rownames</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">t2</span>
+<span class="n">mat.rec</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="n">idx</span><span class="p">,]</span>
+<span class="n">plot3d</span><span class="p">(</span><span class="n">mat.rec</span><span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">],</span><span class="n">col</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="m">1</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s1">'s'</span><span class="p">,</span><span class="n">add</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
 
-<span class="c1">#Dot com bubble in BLUE</span>
-t1 <span class="o">=</span> <span class="s">&quot;1997-04-01&quot;</span>
-t2 <span class="o">=</span> <span class="s">&quot;2003-06-01&quot;</span>
+<span class="c1">#Dot com bubble in BLUE
+</span><span class="n">t1</span> <span class="o">=</span> <span class="s2">"1997-04-01"</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="s2">"2003-06-01"</span>
   
-idx <span class="o">=</span> <span class="kp">rownames</span><span class="p">(</span>mat<span class="p">)</span><span class="o">&gt;=</span>t1 <span class="o">&amp;</span> <span class="kp">rownames</span><span class="p">(</span>mat<span class="p">)</span><span class="o">&lt;=</span>t2
-mat.rec <span class="o">=</span> mat<span class="p">[</span>idx<span class="p">,]</span>
-plot3d<span class="p">(</span>mat.rec<span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">],</span>col<span class="o">=</span>cols<span class="p">[</span><span class="m">2</span><span class="p">],</span>size<span class="o">=</span><span class="m">2</span><span class="p">,</span>type<span class="o">=</span><span class="s">&#39;s&#39;</span><span class="p">,</span>add<span class="o">=</span><span class="bp">T</span><span class="p">)</span></code></pre></figure>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">rownames</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span><span class="o">&gt;=</span><span class="n">t1</span> <span class="o">&amp;</span> <span class="n">rownames</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">t2</span>
+<span class="n">mat.rec</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="n">idx</span><span class="p">,]</span>
+<span class="n">plot3d</span><span class="p">(</span><span class="n">mat.rec</span><span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">],</span><span class="n">col</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="m">2</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s1">'s'</span><span class="p">,</span><span class="n">add</span><span class="o">=</span><span class="n">T</span><span class="p">)</span></code></pre></figure>
 
 <p>Note that the housing bubble data is in red and the dotcom bubble data in blue</p>
 
 <p>Let’s also compare some common economic indicators. Let’s download some data from FRED.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Get Data</span>
-getSymbols<span class="p">(</span>Symbols<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;SPCS10RSA&quot;</span><span class="p">,</span><span class="s">&quot;UNRATE&quot;</span><span class="p">,</span><span class="s">&quot;GDPC1&quot;</span><span class="p">,</span><span class="s">&quot;BAA10Y&quot;</span><span class="p">),</span>src<span class="o">=</span><span class="s">&quot;FRED&quot;</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Get Data
+</span><span class="n">getSymbols</span><span class="p">(</span><span class="n">Symbols</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="s2">"SPCS10RSA"</span><span class="p">,</span><span class="s2">"UNRATE"</span><span class="p">,</span><span class="s2">"GDPC1"</span><span class="p">,</span><span class="s2">"BAA10Y"</span><span class="p">),</span><span class="n">src</span><span class="o">=</span><span class="s2">"FRED"</span><span class="p">)</span></code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-text" data-lang="text">## [1] &quot;SPCS10RSA&quot; &quot;UNRATE&quot;    &quot;GDPC1&quot;     &quot;BAA10Y&quot;</code></pre></figure>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">## [1] "SPCS10RSA" "UNRATE"    "GDPC1"     "BAA10Y"</code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Merge</span>
-mat <span class="o">=</span> <span class="kp">merge</span><span class="p">(</span>SPCS10RSA<span class="p">,</span>UNRATE<span class="p">,</span>GDPC1<span class="p">,</span>BAA10Y<span class="p">)</span>
-mat <span class="o">=</span> mat<span class="p">[</span><span class="kp">which</span><span class="p">(</span>index<span class="p">(</span>mat<span class="p">)</span><span class="o">==</span><span class="s">&quot;1990-01-01&quot;</span><span class="p">)</span><span class="o">:</span><span class="kp">nrow</span><span class="p">(</span>mat<span class="p">),]</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#Merge
+</span><span class="n">mat</span> <span class="o">=</span> <span class="n">merge</span><span class="p">(</span><span class="n">SPCS10RSA</span><span class="p">,</span><span class="n">UNRATE</span><span class="p">,</span><span class="n">GDPC1</span><span class="p">,</span><span class="n">BAA10Y</span><span class="p">)</span>
+<span class="n">mat</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="n">which</span><span class="p">(</span><span class="n">index</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span><span class="o">==</span><span class="s2">"1990-01-01"</span><span class="p">)</span><span class="o">:</span><span class="n">nrow</span><span class="p">(</span><span class="n">mat</span><span class="p">),]</span>
 
-<span class="c1">#Convert to Quarterly</span>
-mat <span class="o">=</span> aggregate<span class="p">(</span>x<span class="o">=</span>mat<span class="p">,</span>by<span class="o">=</span>as.yearqtr<span class="p">,</span>FUN<span class="o">=</span><span class="kr">function</span><span class="p">(</span>x<span class="p">){</span>
-  <span class="kp">round</span><span class="p">(</span><span class="kp">mean</span><span class="p">(</span>x<span class="p">,</span>na.rm<span class="o">=</span><span class="bp">T</span><span class="p">),</span><span class="m">2</span><span class="p">)</span>
+<span class="c1">#Convert to Quarterly
+</span><span class="n">mat</span> <span class="o">=</span> <span class="n">aggregate</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">mat</span><span class="p">,</span><span class="n">by</span><span class="o">=</span><span class="n">as.yearqtr</span><span class="p">,</span><span class="n">FUN</span><span class="o">=</span><span class="k">function</span><span class="p">(</span><span class="n">x</span><span class="p">){</span>
+  <span class="n">round</span><span class="p">(</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">na.rm</span><span class="o">=</span><span class="n">T</span><span class="p">),</span><span class="m">2</span><span class="p">)</span>
 <span class="p">})</span>
 
-<span class="c1">#Get limits</span>
-xmin1 <span class="o">=</span> <span class="kp">which</span><span class="p">(</span>index<span class="p">(</span>mat<span class="p">)</span><span class="o">==</span><span class="s">&quot;2007 Q4&quot;</span><span class="p">)</span>
-xmax1 <span class="o">=</span> <span class="kp">which</span><span class="p">(</span>index<span class="p">(</span>mat<span class="p">)</span><span class="o">==</span><span class="s">&quot;2009 Q2&quot;</span><span class="p">)</span>
+<span class="c1">#Get limits
+</span><span class="n">xmin1</span> <span class="o">=</span> <span class="n">which</span><span class="p">(</span><span class="n">index</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span><span class="o">==</span><span class="s2">"2007 Q4"</span><span class="p">)</span>
+<span class="n">xmax1</span> <span class="o">=</span> <span class="n">which</span><span class="p">(</span><span class="n">index</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span><span class="o">==</span><span class="s2">"2009 Q2"</span><span class="p">)</span>
 
-xmin2 <span class="o">=</span> <span class="kp">which</span><span class="p">(</span>index<span class="p">(</span>mat<span class="p">)</span><span class="o">==</span><span class="s">&quot;2001 Q1&quot;</span><span class="p">)</span>
-xmax2 <span class="o">=</span> <span class="kp">which</span><span class="p">(</span>index<span class="p">(</span>mat<span class="p">)</span><span class="o">==</span><span class="s">&quot;2002 Q1&quot;</span><span class="p">)</span>
+<span class="n">xmin2</span> <span class="o">=</span> <span class="n">which</span><span class="p">(</span><span class="n">index</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span><span class="o">==</span><span class="s2">"2001 Q1"</span><span class="p">)</span>
+<span class="n">xmax2</span> <span class="o">=</span> <span class="n">which</span><span class="p">(</span><span class="n">index</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span><span class="o">==</span><span class="s2">"2002 Q1"</span><span class="p">)</span>
 
-ymin <span class="o">=</span> <span class="o">-</span><span class="kc">Inf</span>
-ymax <span class="o">=</span> <span class="kc">Inf</span>
+<span class="n">ymin</span> <span class="o">=</span> <span class="o">-</span><span class="n">Inf</span>
+<span class="n">ymax</span> <span class="o">=</span> <span class="n">Inf</span>
 
-limits <span class="o">=</span> <span class="kt">data.frame</span><span class="p">(</span>xmin1<span class="p">,</span>xmax1<span class="p">,</span>xmin2<span class="p">,</span>xmax2<span class="p">,</span>ymin<span class="p">,</span>ymax<span class="p">)</span>
+<span class="n">limits</span> <span class="o">=</span> <span class="n">data.frame</span><span class="p">(</span><span class="n">xmin1</span><span class="p">,</span><span class="n">xmax1</span><span class="p">,</span><span class="n">xmin2</span><span class="p">,</span><span class="n">xmax2</span><span class="p">,</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="p">)</span>
 
-<span class="c1">#Convert to data.frame</span>
-mat <span class="o">=</span> <span class="kt">data.frame</span><span class="p">(</span>mat<span class="p">,</span>dates<span class="o">=</span>index<span class="p">(</span>mat<span class="p">),</span>idx<span class="o">=</span><span class="m">1</span><span class="o">:</span><span class="kp">nrow</span><span class="p">(</span>mat<span class="p">))</span>
+<span class="c1">#Convert to data.frame
+</span><span class="n">mat</span> <span class="o">=</span> <span class="n">data.frame</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">dates</span><span class="o">=</span><span class="n">index</span><span class="p">(</span><span class="n">mat</span><span class="p">),</span><span class="n">idx</span><span class="o">=</span><span class="m">1</span><span class="o">:</span><span class="n">nrow</span><span class="p">(</span><span class="n">mat</span><span class="p">))</span>
 
-p1 <span class="o">=</span> ggplot<span class="p">(</span>mat<span class="p">,</span>aes<span class="p">(</span>x<span class="o">=</span>idx<span class="p">))</span><span class="o">+</span>
-  geom_line<span class="p">(</span>aes<span class="p">(</span>y<span class="o">=</span>SPCS10RSA<span class="p">),</span>size<span class="o">=</span><span class="m">1</span><span class="p">,</span>col<span class="o">=</span>cols<span class="p">[</span><span class="m">2</span><span class="p">])</span><span class="o">+</span>
-  xlab<span class="p">(</span><span class="s">&quot;Time&quot;</span><span class="p">)</span><span class="o">+</span>ggtitle<span class="p">(</span><span class="s">&quot;House Price Index&quot;</span><span class="p">)</span><span class="o">+</span>
-  geom_rect<span class="p">(</span>data<span class="o">=</span>limits<span class="p">,</span>
-            aes<span class="p">(</span>xmin<span class="o">=</span>xmin1<span class="p">,</span>xmax<span class="o">=</span>xmax1<span class="p">,</span>ymin<span class="o">=</span>ymin<span class="p">,</span>ymax<span class="o">=</span>ymax<span class="p">),</span>
-            fill<span class="o">=</span><span class="s">&quot;black&quot;</span><span class="p">,</span>alpha<span class="o">=</span><span class="m">0.2</span><span class="p">,</span>inherit.aes<span class="o">=</span><span class="bp">F</span><span class="p">)</span><span class="o">+</span>
-  geom_rect<span class="p">(</span>data<span class="o">=</span>limits<span class="p">,</span>
-            aes<span class="p">(</span>xmin<span class="o">=</span>xmin2<span class="p">,</span>xmax<span class="o">=</span>xmax2<span class="p">,</span>ymin<span class="o">=</span>ymin<span class="p">,</span>ymax<span class="o">=</span>ymax<span class="p">),</span>
-            fill<span class="o">=</span><span class="s">&quot;black&quot;</span><span class="p">,</span>alpha<span class="o">=</span><span class="m">0.2</span><span class="p">,</span>inherit.aes<span class="o">=</span><span class="bp">F</span><span class="p">)</span>
+<span class="n">p1</span> <span class="o">=</span> <span class="n">ggplot</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span><span class="o">+</span>
+  <span class="n">geom_line</span><span class="p">(</span><span class="n">aes</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">SPCS10RSA</span><span class="p">),</span><span class="n">size</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="m">2</span><span class="p">])</span><span class="o">+</span>
+  <span class="n">xlab</span><span class="p">(</span><span class="s2">"Time"</span><span class="p">)</span><span class="o">+</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">"House Price Index"</span><span class="p">)</span><span class="o">+</span>
+  <span class="n">geom_rect</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">limits</span><span class="p">,</span>
+            <span class="n">aes</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="n">xmin1</span><span class="p">,</span><span class="n">xmax</span><span class="o">=</span><span class="n">xmax1</span><span class="p">,</span><span class="n">ymin</span><span class="o">=</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="o">=</span><span class="n">ymax</span><span class="p">),</span>
+            <span class="n">fill</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.2</span><span class="p">,</span><span class="n">inherit.aes</span><span class="o">=</span><span class="n">F</span><span class="p">)</span><span class="o">+</span>
+  <span class="n">geom_rect</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">limits</span><span class="p">,</span>
+            <span class="n">aes</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="n">xmin2</span><span class="p">,</span><span class="n">xmax</span><span class="o">=</span><span class="n">xmax2</span><span class="p">,</span><span class="n">ymin</span><span class="o">=</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="o">=</span><span class="n">ymax</span><span class="p">),</span>
+            <span class="n">fill</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.2</span><span class="p">,</span><span class="n">inherit.aes</span><span class="o">=</span><span class="n">F</span><span class="p">)</span>
   
-p2 <span class="o">=</span> ggplot<span class="p">(</span>mat<span class="p">,</span>aes<span class="p">(</span>x<span class="o">=</span>idx<span class="p">))</span><span class="o">+</span>
-  geom_line<span class="p">(</span>aes<span class="p">(</span>y<span class="o">=</span>UNRATE<span class="p">),</span>size<span class="o">=</span><span class="m">1</span><span class="p">,</span>col<span class="o">=</span>cols<span class="p">[</span><span class="m">1</span><span class="p">])</span><span class="o">+</span>
-  xlab<span class="p">(</span><span class="s">&quot;Time&quot;</span><span class="p">)</span><span class="o">+</span>ggtitle<span class="p">(</span><span class="s">&quot;Unemployment&quot;</span><span class="p">)</span><span class="o">+</span>
-  geom_rect<span class="p">(</span>data<span class="o">=</span>limits<span class="p">,</span>
-            aes<span class="p">(</span>xmin<span class="o">=</span>xmin1<span class="p">,</span>xmax<span class="o">=</span>xmax1<span class="p">,</span>ymin<span class="o">=</span>ymin<span class="p">,</span>ymax<span class="o">=</span>ymax<span class="p">),</span>
-            fill<span class="o">=</span><span class="s">&quot;black&quot;</span><span class="p">,</span>alpha<span class="o">=</span><span class="m">0.2</span><span class="p">,</span>inherit.aes<span class="o">=</span><span class="bp">F</span><span class="p">)</span><span class="o">+</span>
-  geom_rect<span class="p">(</span>data<span class="o">=</span>limits<span class="p">,</span>
-            aes<span class="p">(</span>xmin<span class="o">=</span>xmin2<span class="p">,</span>xmax<span class="o">=</span>xmax2<span class="p">,</span>ymin<span class="o">=</span>ymin<span class="p">,</span>ymax<span class="o">=</span>ymax<span class="p">),</span>
-            fill<span class="o">=</span><span class="s">&quot;black&quot;</span><span class="p">,</span>alpha<span class="o">=</span><span class="m">0.2</span><span class="p">,</span>inherit.aes<span class="o">=</span><span class="bp">F</span><span class="p">)</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="n">ggplot</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span><span class="o">+</span>
+  <span class="n">geom_line</span><span class="p">(</span><span class="n">aes</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">UNRATE</span><span class="p">),</span><span class="n">size</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="m">1</span><span class="p">])</span><span class="o">+</span>
+  <span class="n">xlab</span><span class="p">(</span><span class="s2">"Time"</span><span class="p">)</span><span class="o">+</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">"Unemployment"</span><span class="p">)</span><span class="o">+</span>
+  <span class="n">geom_rect</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">limits</span><span class="p">,</span>
+            <span class="n">aes</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="n">xmin1</span><span class="p">,</span><span class="n">xmax</span><span class="o">=</span><span class="n">xmax1</span><span class="p">,</span><span class="n">ymin</span><span class="o">=</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="o">=</span><span class="n">ymax</span><span class="p">),</span>
+            <span class="n">fill</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.2</span><span class="p">,</span><span class="n">inherit.aes</span><span class="o">=</span><span class="n">F</span><span class="p">)</span><span class="o">+</span>
+  <span class="n">geom_rect</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">limits</span><span class="p">,</span>
+            <span class="n">aes</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="n">xmin2</span><span class="p">,</span><span class="n">xmax</span><span class="o">=</span><span class="n">xmax2</span><span class="p">,</span><span class="n">ymin</span><span class="o">=</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="o">=</span><span class="n">ymax</span><span class="p">),</span>
+            <span class="n">fill</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.2</span><span class="p">,</span><span class="n">inherit.aes</span><span class="o">=</span><span class="n">F</span><span class="p">)</span>
 
-p3 <span class="o">=</span> ggplot<span class="p">(</span>mat<span class="p">,</span>aes<span class="p">(</span>x<span class="o">=</span>idx<span class="p">))</span><span class="o">+</span>
-  geom_line<span class="p">(</span>aes<span class="p">(</span>y<span class="o">=</span>GDPC1<span class="p">),</span>size<span class="o">=</span><span class="m">1</span><span class="p">,</span>col<span class="o">=</span>cols<span class="p">[</span><span class="m">3</span><span class="p">])</span><span class="o">+</span>
-  xlab<span class="p">(</span><span class="s">&quot;Time&quot;</span><span class="p">)</span><span class="o">+</span>ggtitle<span class="p">(</span><span class="s">&quot;GDP&quot;</span><span class="p">)</span><span class="o">+</span>
-  geom_rect<span class="p">(</span>data<span class="o">=</span>limits<span class="p">,</span>
-            aes<span class="p">(</span>xmin<span class="o">=</span>xmin1<span class="p">,</span>xmax<span class="o">=</span>xmax1<span class="p">,</span>ymin<span class="o">=</span>ymin<span class="p">,</span>ymax<span class="o">=</span>ymax<span class="p">),</span>
-            fill<span class="o">=</span><span class="s">&quot;black&quot;</span><span class="p">,</span>alpha<span class="o">=</span><span class="m">0.2</span><span class="p">,</span>inherit.aes<span class="o">=</span><span class="bp">F</span><span class="p">)</span><span class="o">+</span>
-  geom_rect<span class="p">(</span>data<span class="o">=</span>limits<span class="p">,</span>
-            aes<span class="p">(</span>xmin<span class="o">=</span>xmin2<span class="p">,</span>xmax<span class="o">=</span>xmax2<span class="p">,</span>ymin<span class="o">=</span>ymin<span class="p">,</span>ymax<span class="o">=</span>ymax<span class="p">),</span>
-            fill<span class="o">=</span><span class="s">&quot;black&quot;</span><span class="p">,</span>alpha<span class="o">=</span><span class="m">0.2</span><span class="p">,</span>inherit.aes<span class="o">=</span><span class="bp">F</span><span class="p">)</span>
+<span class="n">p3</span> <span class="o">=</span> <span class="n">ggplot</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span><span class="o">+</span>
+  <span class="n">geom_line</span><span class="p">(</span><span class="n">aes</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">GDPC1</span><span class="p">),</span><span class="n">size</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="m">3</span><span class="p">])</span><span class="o">+</span>
+  <span class="n">xlab</span><span class="p">(</span><span class="s2">"Time"</span><span class="p">)</span><span class="o">+</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">"GDP"</span><span class="p">)</span><span class="o">+</span>
+  <span class="n">geom_rect</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">limits</span><span class="p">,</span>
+            <span class="n">aes</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="n">xmin1</span><span class="p">,</span><span class="n">xmax</span><span class="o">=</span><span class="n">xmax1</span><span class="p">,</span><span class="n">ymin</span><span class="o">=</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="o">=</span><span class="n">ymax</span><span class="p">),</span>
+            <span class="n">fill</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.2</span><span class="p">,</span><span class="n">inherit.aes</span><span class="o">=</span><span class="n">F</span><span class="p">)</span><span class="o">+</span>
+  <span class="n">geom_rect</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">limits</span><span class="p">,</span>
+            <span class="n">aes</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="n">xmin2</span><span class="p">,</span><span class="n">xmax</span><span class="o">=</span><span class="n">xmax2</span><span class="p">,</span><span class="n">ymin</span><span class="o">=</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="o">=</span><span class="n">ymax</span><span class="p">),</span>
+            <span class="n">fill</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.2</span><span class="p">,</span><span class="n">inherit.aes</span><span class="o">=</span><span class="n">F</span><span class="p">)</span>
 
-p4 <span class="o">=</span> ggplot<span class="p">(</span>mat<span class="p">,</span>aes<span class="p">(</span>x<span class="o">=</span>idx<span class="p">))</span><span class="o">+</span>
-  geom_line<span class="p">(</span>aes<span class="p">(</span>y<span class="o">=</span>BAA10Y<span class="p">),</span>size<span class="o">=</span><span class="m">1</span><span class="p">,</span>col<span class="o">=</span>cols<span class="p">[</span><span class="m">4</span><span class="p">])</span><span class="o">+</span>
-  xlab<span class="p">(</span><span class="s">&quot;Time&quot;</span><span class="p">)</span><span class="o">+</span>ggtitle<span class="p">(</span><span class="s">&quot;Interest Rate Spread&quot;</span><span class="p">)</span><span class="o">+</span>
-  geom_rect<span class="p">(</span>data<span class="o">=</span>limits<span class="p">,</span>
-            aes<span class="p">(</span>xmin<span class="o">=</span>xmin1<span class="p">,</span>xmax<span class="o">=</span>xmax1<span class="p">,</span>ymin<span class="o">=</span>ymin<span class="p">,</span>ymax<span class="o">=</span>ymax<span class="p">),</span>
-            fill<span class="o">=</span><span class="s">&quot;black&quot;</span><span class="p">,</span>alpha<span class="o">=</span><span class="m">0.2</span><span class="p">,</span>inherit.aes<span class="o">=</span><span class="bp">F</span><span class="p">)</span><span class="o">+</span>
-  geom_rect<span class="p">(</span>data<span class="o">=</span>limits<span class="p">,</span>
-            aes<span class="p">(</span>xmin<span class="o">=</span>xmin2<span class="p">,</span>xmax<span class="o">=</span>xmax2<span class="p">,</span>ymin<span class="o">=</span>ymin<span class="p">,</span>ymax<span class="o">=</span>ymax<span class="p">),</span>
-            fill<span class="o">=</span><span class="s">&quot;black&quot;</span><span class="p">,</span>alpha<span class="o">=</span><span class="m">0.2</span><span class="p">,</span>inherit.aes<span class="o">=</span><span class="bp">F</span><span class="p">)</span>
+<span class="n">p4</span> <span class="o">=</span> <span class="n">ggplot</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">idx</span><span class="p">))</span><span class="o">+</span>
+  <span class="n">geom_line</span><span class="p">(</span><span class="n">aes</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">BAA10Y</span><span class="p">),</span><span class="n">size</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="m">4</span><span class="p">])</span><span class="o">+</span>
+  <span class="n">xlab</span><span class="p">(</span><span class="s2">"Time"</span><span class="p">)</span><span class="o">+</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">"Interest Rate Spread"</span><span class="p">)</span><span class="o">+</span>
+  <span class="n">geom_rect</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">limits</span><span class="p">,</span>
+            <span class="n">aes</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="n">xmin1</span><span class="p">,</span><span class="n">xmax</span><span class="o">=</span><span class="n">xmax1</span><span class="p">,</span><span class="n">ymin</span><span class="o">=</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="o">=</span><span class="n">ymax</span><span class="p">),</span>
+            <span class="n">fill</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.2</span><span class="p">,</span><span class="n">inherit.aes</span><span class="o">=</span><span class="n">F</span><span class="p">)</span><span class="o">+</span>
+  <span class="n">geom_rect</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">limits</span><span class="p">,</span>
+            <span class="n">aes</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="n">xmin2</span><span class="p">,</span><span class="n">xmax</span><span class="o">=</span><span class="n">xmax2</span><span class="p">,</span><span class="n">ymin</span><span class="o">=</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="o">=</span><span class="n">ymax</span><span class="p">),</span>
+            <span class="n">fill</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.2</span><span class="p">,</span><span class="n">inherit.aes</span><span class="o">=</span><span class="n">F</span><span class="p">)</span>
 
-<span class="kn">source</span><span class="p">(</span><span class="s">&quot;Multiplot.R&quot;</span><span class="p">)</span>
-multiplot<span class="p">(</span>p1<span class="p">,</span>p2<span class="p">,</span>p3<span class="p">,</span>p4<span class="p">,</span>cols<span class="o">=</span><span class="m">2</span><span class="p">)</span></code></pre></figure>
+<span class="n">source</span><span class="p">(</span><span class="s2">"Multiplot.R"</span><span class="p">)</span>
+<span class="n">multiplot</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">,</span><span class="n">p3</span><span class="p">,</span><span class="n">p4</span><span class="p">,</span><span class="n">cols</span><span class="o">=</span><span class="m">2</span><span class="p">)</span></code></pre></figure>
 
 <p><img src="/assets/figures/Clustering/unnamed-chunk-10-1.png" title="center" alt="center" style="display: block; margin: auto;" /></p>
 
@@ -323,6 +320,15 @@ http://jaredbernsteinblog.com/why-was-the-housing-bubble-so-much-more-damaging-t
     
       <li>
         <h3>
+          <a href="/2016/02/18/Data-Table-Tutorial.html">
+            A data.table Tutorial
+            <small>18 Feb 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <a href="/2015/12/29/HappyNewYear.html">
             Happy New Year using a Heatmap !?
             <small>29 Dec 2015</small>
@@ -335,15 +341,6 @@ http://jaredbernsteinblog.com/why-was-the-housing-bubble-so-much-more-damaging-t
           <a href="/2014/10/20/RChart.html">
             RCharts
             <small>20 Oct 2014</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/2014/09/15/lm-vs-lmRob.html">
-            lm() vs lmRob()
-            <small>15 Sep 2014</small>
           </a>
         </h3>
       </li>

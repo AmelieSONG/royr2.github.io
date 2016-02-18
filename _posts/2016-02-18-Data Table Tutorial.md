@@ -1,3 +1,11 @@
+---
+title: "A data.table Tutorial"
+layout: post
+output: 
+  html_document: 
+    keep_md: yes
+---
+
 This post is more for my learning but hopefully helps someone get acquainted with `data.table()` as well.  
 
 I'll use the `PimaIndiansDiabetes` dataset from the `mlbench` package. By the way I really like this package. It has a lot of databases from the [UC Irvine Machine Learning Database](http://archive.ics.uci.edu/ml/) and is an excellent source of data for doing some data analysis and implementing some machine learning algorithms. 
@@ -64,24 +72,13 @@ One thing I always struggle with is subsetting data quickly and efficiently. `da
 
 {% highlight r %}
 subset <- ds[age > 50 & diabetes == "pos", ]
-{% endhighlight %}
-
-
-
-{% highlight text %}
-## Error in `[.data.frame`(x, i, j): object 'age' not found
-{% endhighlight %}
-
-
-
-{% highlight r %}
 nrow(subset)
 {% endhighlight %}
 
 
 
 {% highlight text %}
-## NULL
+## [1] 38
 {% endhighlight %}
 
 > Q: How many people with a plasma glucose level range of [120 - 150] had diabetes?
@@ -89,24 +86,13 @@ nrow(subset)
 
 {% highlight r %}
 subset <- ds[glucose %in% 120:150 & diabetes == "pos"]
-{% endhighlight %}
-
-
-
-{% highlight text %}
-## Error in match(x, table, nomatch = 0L): object 'glucose' not found
-{% endhighlight %}
-
-
-
-{% highlight r %}
 nrow(subset)
 {% endhighlight %}
 
 
 
 {% highlight text %}
-## NULL
+## [1] 93
 {% endhighlight %}
 
 ### Setting a Key
@@ -155,26 +141,18 @@ Setting a **key** will also allow for the `.()` operator to be used.
 {% highlight r %}
 setkey(ds, age, diabetes)
 subset <- ds[.(50, "pos"),]
-{% endhighlight %}
-
-
-
-{% highlight text %}
-## Error in `[.data.frame`(x, i, j): could not find function "."
-{% endhighlight %}
-
-
-
-{% highlight r %}
 head(subset)
 {% endhighlight %}
 
 
 
 {% highlight text %}
-##                      
-## 1 function (x, ...)  
-## 2 UseMethod("subset")
+##    pregnant glucose pressure triceps insulin mass pedigree age diabetes
+## 1:        6     148       72      35       0 33.6    0.627  50      pos
+## 2:       11     138       74      26     144 36.1    0.557  50      pos
+## 3:        9     112       82      24       0 28.2    1.282  50      pos
+## 4:        6     147       80       0       0 29.5    0.178  50      pos
+## 5:        6     162       62       0       0 24.3    0.178  50      pos
 {% endhighlight %}
 
 
@@ -186,7 +164,7 @@ nrow(subset)
 
 
 {% highlight text %}
-## NULL
+## [1] 5
 {% endhighlight %}
 
 ### Selecting columns
@@ -217,7 +195,7 @@ ds[.(21, "pos"), glucose] %>% range  # super clean and easy
 
 
 {% highlight text %}
-## Error in `[.data.frame`(x, i, j): object 'glucose' not found
+## [1] 113 177
 {% endhighlight %}
 
 This kind of subsetting and column selection can come in handy when trying to make some exploratory charts. Say we want to make a simple scatterplot to compare `glucose` vs `pressure` for people in the age bracket of 25 to 30.
@@ -232,11 +210,7 @@ ds[.(25:30), .(glucose, pressure, diabetes)] %>%
   ggtitle("Glucose vs Pressure")
 {% endhighlight %}
 
-
-
-{% highlight text %}
-## Error in `[.data.frame`(x, i, j): could not find function "."
-{% endhighlight %}
+![center](/assets/figures/Data Table Tutorial/unnamed-chunk-6-1.png)
 
 Easy isn't it?
 
@@ -252,7 +226,7 @@ ds[.(20:30, "pos"), triceps] %>% mean(na.rm = T)
 
 
 {% highlight text %}
-## Error in `[.data.frame`(x, i, j): object 'triceps' not found
+## [1] 25.22222
 {% endhighlight %}
 
 ### Grouping
@@ -269,7 +243,18 @@ ds[.(21:30, "pos"), mean(mass), by = pregnant]
 
 
 {% highlight text %}
-## Error in mean(mass): object 'mass' not found
+##     pregnant       V1
+##  1:        0 40.60000
+##  2:        1 41.29091
+##  3:        2 34.99286
+##  4:        4 34.92500
+##  5:        3 32.10000
+##  6:        8 28.40000
+##  7:        5 39.43333
+##  8:        9 29.00000
+##  9:        6 31.50000
+## 10:        7 26.50000
+## 11:       10  0.00000
 {% endhighlight %}
 
 We can use this to create some charts as well.
@@ -289,11 +274,7 @@ ds[,.(mean(glucose), mean(pressure)), by = .(AgeInterval, diabetes), nomatch = 0
   ggtitle("Avg. Glucose and Pressure grouped by age group")
 {% endhighlight %}
 
-
-
-{% highlight text %}
-## Error in `[.data.frame`(x, i, j): could not find function "."
-{% endhighlight %}
+![center](/assets/figures/Data Table Tutorial/unnamed-chunk-9-1.png)
 
 For more details visit the [data.table vignette](https://rawgit.com/wiki/Rdatatable/data.table/vignettes/datatable-keys-fast-subset.html). 
 
