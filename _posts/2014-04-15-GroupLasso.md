@@ -1,11 +1,5 @@
 ---
 title: "Group Lasso"
-author: "Riddhiman Roy"
-date: "April 15th 2014"
-output:
-  html_document:
-    keep_md: yes
-    self_contained: yes
 layout: post
 ---
 

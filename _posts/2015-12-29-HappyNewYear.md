@@ -1,11 +1,5 @@
 ---
 title: "Happy New Year using a Heatmap !?"
-author: "Riddhiman Roy"
-date: "December 29th 2015"
-output:
-  html_document:
-    keep_md: yes
-    self_contained: yes
 layout: post_nocomments
 ---
 

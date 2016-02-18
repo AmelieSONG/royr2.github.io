@@ -1,9 +1,6 @@
 ---
 title: "A data.table Tutorial"
 layout: post
-output: 
-  html_document: 
-    keep_md: yes
 ---
 
 This post is more for my learning but hopefully helps someone get acquainted with `data.table()` as well.  

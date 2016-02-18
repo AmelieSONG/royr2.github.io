@@ -1,11 +1,5 @@
 ---
 title: "lm() vs lmRob()"
-author: "Riddhiman Roy"
-date: "September 15th 2014"
-output:
-  html_document:
-    keep_md: yes
-    self_contained: yes
 layout: post
 ---
 

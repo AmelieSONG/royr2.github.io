@@ -1,11 +1,5 @@
 ---
 title: "Sparse Group Lasso"
-author: "Riddhiman Roy"
-date: "May 20th 2014"
-output:
-  html_document:
-    keep_md: yes
-    self_contained: yes
 layout: post
 ---
 

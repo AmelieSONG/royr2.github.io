@@ -1,11 +1,5 @@
 ---
 title: "Bootstrapping StepAIC()"
-author: "Riddhiman Roy"
-date: "March 15th 2014"
-output:
-  html_document:
-    keep_md: yes
-    self_contained: yes
 layout: post
 ---
 
