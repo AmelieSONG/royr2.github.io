@@ -12,12 +12,12 @@ I'll structure this tutorial using assignment style Questions and Answers.
 
 
 
-```r
+{% highlight r %}
 library(data.table)
 library(mlbench)
 library(ggplot2)
 library(magrittr)
-```
+{% endhighlight %}
 
 ### Basic structure
 Here's how I understand the basic setup for using an object of type `data.table`.
@@ -36,14 +36,14 @@ Let's see some examples
 
 ### Creating a data table
 
-{% highlight r %}
+``` r
 data("PimaIndiansDiabetes")
 ds <- data.table(PimaIndiansDiabetes)
 
 # Since a data table supports all functions that be 
 # used on a dataframe we can do this
 str(ds)
-{% endhighlight %}
+```
 
 
 
