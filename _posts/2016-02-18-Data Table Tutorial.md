@@ -36,14 +36,14 @@ Let's see some examples
 
 ### Creating a data table
 
-``` r
+{% highlight r %}
 data("PimaIndiansDiabetes")
 ds <- data.table(PimaIndiansDiabetes)
 
 # Since a data table supports all functions that be 
 # used on a dataframe we can do this
 str(ds)
-```
+{% endhighlight %}
 
 
 
