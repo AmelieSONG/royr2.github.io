@@ -3,6 +3,8 @@ label: Test
 hide_body: false
 fields:
 - type: text
+  name: testt
+  label: Testt
 - type: boolean
   name: test
   label: Test
