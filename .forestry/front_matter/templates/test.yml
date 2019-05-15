@@ -1,0 +1,13 @@
+---
+label: Test
+hide_body: false
+fields:
+- type: text
+- type: boolean
+  name: test
+  label: Test
+  description: Test
+- type: textarea
+  name: testText
+  label: Test
+  description: Test
