@@ -13,3 +13,5 @@ fields:
   name: testText
   label: Test
   description: Test
+pages:
+- _posts/Testt.md
