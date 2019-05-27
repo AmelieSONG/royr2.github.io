@@ -1,5 +1,5 @@
 ---
-title: Visualising Inequality
+title: Fun with plotly
 layout: post
 
 ---
